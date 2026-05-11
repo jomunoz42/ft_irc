@@ -29,6 +29,7 @@ class Server {
 		struct sigaction _signal_handler;
 		std::vector<pollfd> _socket_list;
 		std::map<int, std::string> _errors;
+		std::map<int, std::string> _replies;
 		std::map<std::string, Channel> _channels;
 		std::map<std::string, commandPtrServer> _server_commands;
 	public:
@@ -39,21 +40,24 @@ class Server {
 		void start(void);
 		void run(void);
 		void stop(void);
+		void addClient(void);
 		void addSocket(int socket);
 		void setNonBlocking(int socket);
-		void addClient(void);
-		void removeClient(Client &client);
-		e_data receiveClientData(Client &client);
 		void processData(Client &client);
+		void removeClient(Client &client);
+		std::string getPrefix(void) const;
+		pollfd &getPollfd(const int socket);
+		void flushSendBuffer(Client &client);
+		e_data receiveClientData(Client &client);
 		void processCommand(Client &client, std::string &line);
 		void sendMessage(Client &client, std::string &message);
 		void sendError(Client &client, int code, std::string &command);
-		void broadcastMessage(Channel &channel, std::string &message, Client *exclude);
 		void commandPass(Client &client, std::vector<std::string> &args);
 		void commandNick(Client &client, std::vector<std::string> &args);
 		void commandUser(Client &client, std::vector<std::string> &args);
 		void commandJoin(Client &client, std::vector<std::string> &args);
 		void commandPrivmsg(Client &client, std::vector<std::string> &args);
+		void broadcastMessage(Channel &channel, std::string &message, Client *exclude);
 };
 
 #endif

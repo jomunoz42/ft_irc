@@ -24,7 +24,10 @@ class Channel {
 		void setTopic(const std::string new_topic);
 		std::string getTopic(void);
 		std::vector<Client*> getUsers(void);
-		void removeUser(Client &client);		
+		void addUser(Client &client);
+		void removeUser(Client &client);
+		void addOperator(Client &client);
+		void removeOperator(Client &client);
 		// void commandKick(std::string user);
 		// void commandInvite(std::string user);
 		// void commandTopic(std::string new_topic);

@@ -13,23 +13,26 @@ class Client {
 		std::string _send_buffer;
 		std::vector<std::string> _channels;
 		bool _pass_accepted;
+		bool _has_nickname;
+		bool _has_username;
 		bool _registered;
 	public:
 		Client(int socket);
 		~Client();
 		Client(const Client& other);
 		Client& operator=(const Client& other);
-		void setNickname(const std::string nickname);
+		void registerClient(void);
+		int getSocket(void) const;
+		void passwordAccepted(void);
+		bool isRegistered(void) const;
+		std::string &getSendBuffer(void);
+		std::string &getRecvBuffer(void);
+		std::string getUsername(void) const;
 		std::string getNickname(void) const;
 		void setUsername(const std::string username);
-		std::string getUsername(void) const;
-		int getSocket(void) const;
-		std::string &getRecvBuffer(void);
-		std::string &getSendBuffer(void);
 		std::vector<std::string> &getChannels(void);
-		bool isRegistered(void) const;
-		void passwordAccepted(void);
-		void registerClient(void);
+		void setNickname(const std::string nickname);
+		std::string getPrefix(const std::string host) const;
 };
 
 #endif
