@@ -36,32 +36,28 @@ void Server::run(void) {
 			std::string error = std::strerror(errno);
 			throw std::runtime_error(std::string("poll() failed: ") + error);
 		}
-		for (size_t i = 0; i < this->_socket_list.size();) {
-			if (this->_socket_list.at(i).revents & POLLIN) {
-				int socket = this->_socket_list.at(i).fd;
-				if (socket == this->_socket) {
-					this->addClient();
-					++i;
-					continue ;
-				}
-				else {
-					std::map<int, Client>::iterator j = this->_clients.find(socket);
-					if (j != this->_clients.end()) {
-						Client &client = j->second;
-						size_t size_before = this->_socket_list.size();
-						e_data ret = this->receiveClientData(client);
-						if (ret == RECEIVED) {
-							std::cout << "IRC Server has received data!" << std::endl;
-							this->processData(client);
-						}
-						else if (ret == DISCONNECTED || ret == ERROR)
-							this->removeClient(client);
-						if (this->_socket_list.size() < size_before)
-							continue ;
-					}
-				}
+		if (this->getPollfd(this->_socket).revents & POLLIN)
+			this->addClient();
+		for (std::map<int, Client>::iterator i = this->_clients.begin(); i != this->_clients.end(); ) {
+			e_data ret;
+			Client &client = i->second;
+			std::map<int, Client>::iterator next = i; ++next;
+			bool remove = false;
+			if (this->getPollfd(client.getSocket()).revents & POLLIN) {
+				ret = this->receiveClientData(client);
+				if (ret == SUCCESS)
+					this->processData(client);
+				else if (ret == DISCONNECTED || ret == ERROR)
+					remove = true;
 			}
-			++i;
+			if (!remove && this->getPollfd(client.getSocket()).revents & POLLOUT) {
+				ret = this->flushSendBuffer(client);
+				if (ret == DISCONNECTED || ret == ERROR)
+					remove = true;
+			}
+			if (remove)
+				this->removeClient(client);
+			i = next;
 		}
 	}
 }

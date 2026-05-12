@@ -10,4 +10,5 @@ pollfd &Server::getPollfd(const int socket) {
 		if (this->_socket_list.at(i).fd == socket)
 			return (this->_socket_list.at(i));
 	}
+	throw std::runtime_error("pollfd not found");
 }

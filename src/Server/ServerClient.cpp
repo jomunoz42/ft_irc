@@ -18,6 +18,7 @@ void Server::removeClient(Client &client) {
 	std::vector<std::string> &channels = client.getChannels();
 	for (std::vector<std::string>::iterator i = channels.begin(); i != channels.end(); ++i) {
 		this->_channels.at(*i).removeUser(client);
+		this->_channels.at(*i).removeOperator(client);
 		if (!this->_channels.at(*i).getUsers().size())
 			this->_channels.erase(*i);
 	}

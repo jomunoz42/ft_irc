@@ -11,6 +11,12 @@
 # define ERR_NOTREGISTERED 451
 # define ERR_NEEDMOREPARAMS 461
 # define ERR_PASSWDMISMATCH 464
+# define RPL_WELCOME 001
+# define RPL_YOURHOST 002
+# define RPL_NOTOPIC 331
+# define RPL_TOPIC 332
+# define RPL_NAMREPLY 353
+# define RPL_ENDOFNAMES 366
 # define ERR_PORT_RANGE "Given port is out of the program's valid range, please try another port!"
 
 #endif

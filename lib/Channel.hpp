@@ -22,8 +22,9 @@ class Channel {
 		Channel(const Channel& other);
 		Channel& operator=(const Channel& other);
 		void setTopic(const std::string new_topic);
-		std::string getTopic(void);
+		std::string getTopic(void) const;
 		std::vector<Client*> getUsers(void);
+		std::string getNameList(void) const;
 		void addUser(Client &client);
 		void removeUser(Client &client);
 		void addOperator(Client &client);

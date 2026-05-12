@@ -15,6 +15,10 @@ Server::Server(int port, std::string password, std::string name) : _port(port), 
 	this->_errors.insert(std::make_pair(ERR_NOTREGISTERED, "You have not registered"));
 	this->_errors.insert(std::make_pair(ERR_NEEDMOREPARAMS, "Not enough parameters"));
 	this->_errors.insert(std::make_pair(ERR_PASSWDMISMATCH, "Password incorrect"));
+	this->_replies.insert(std::make_pair(RPL_WELCOME, "Welcome to the IRC Network"));
+	this->_replies.insert(std::make_pair(RPL_YOURHOST, "Your host is " + this->_server_name));
+	this->_replies.insert(std::make_pair(RPL_NOTOPIC, "No topic is set"));
+	this->_replies.insert(std::make_pair(RPL_ENDOFNAMES, "End of /NAMES list"));
 }
 
 Server::~Server(void) {}

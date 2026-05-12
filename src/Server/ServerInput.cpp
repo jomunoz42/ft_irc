@@ -5,18 +5,19 @@ e_data Server::receiveClientData(Client &client) {
 	char tmp[1024];
 	int client_socket = client.getSocket();
 	std::string &buffer = client.getRecvBuffer();
+	std::cout << "IRC Server has received data!" << std::endl;
 	while (true) {
 		ssize_t bytes = recv(client_socket, tmp, sizeof(tmp), 0);
 		if (bytes > 0) {
 			buffer += std::string(tmp, bytes);
-			return (RECEIVED);
+			return (SUCCESS);
 		}
 		if (bytes == 0)
 			return (DISCONNECTED);
 		if (errno == EINTR)
 			continue;
 		if (errno == EAGAIN || errno == EWOULDBLOCK)
-			return (RECEIVED);
+			return (SUCCESS);
 		return (std::cerr << "recv() failed: " << std::strerror(errno) << std::endl, ERROR);
 	}
 }

@@ -9,7 +9,7 @@ class Client;
 class Channel;
 
 typedef enum e_data {
-	RECEIVED,
+	SUCCESS,
 	DISCONNECTED,
 	ERROR
 }	e_data;
@@ -47,11 +47,12 @@ class Server {
 		void removeClient(Client &client);
 		std::string getPrefix(void) const;
 		pollfd &getPollfd(const int socket);
-		void flushSendBuffer(Client &client);
+		e_data flushSendBuffer(Client &client);
 		e_data receiveClientData(Client &client);
 		void processCommand(Client &client, std::string &line);
 		void sendMessage(Client &client, std::string &message);
 		void sendError(Client &client, int code, std::string &command);
+		void sendReply(Client &client, int code, std::string &message);
 		void commandPass(Client &client, std::vector<std::string> &args);
 		void commandNick(Client &client, std::vector<std::string> &args);
 		void commandUser(Client &client, std::vector<std::string> &args);
