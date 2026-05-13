@@ -8,15 +8,19 @@ class Channel;
 
 typedef void (Channel::*commandPtrChannel)(std::string);
 
-class Channel {
+class Channel 
+{
 	private:
+
 		std::string _channel_name;
 		std::string _channel_topic;
 		std::string _channel_password;
 		std::vector<Client*> _users;
 		std::vector<Client*> _operators;
 		std::map<std::string, commandPtrChannel> _channel_commands;
+
 	public:
+	
 		Channel(std::string name);
 		~Channel();
 		Channel(const Channel& other);

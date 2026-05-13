@@ -8,7 +8,8 @@ class Server;
 class Client;
 class Channel;
 
-typedef enum e_data {
+typedef enum e_data 
+{
 	SUCCESS,
 	DISCONNECTED,
 	ERROR
@@ -16,8 +17,10 @@ typedef enum e_data {
 
 typedef void (Server::*commandPtrServer)(Client &, std::vector<std::string> &);
 
-class Server {
+class Server 
+{
 	private:
+
 		int _port;
 		int _socket;
 		bool _server_running;
@@ -32,7 +35,9 @@ class Server {
 		std::map<int, std::string> _replies;
 		std::map<std::string, Channel> _channels;
 		std::map<std::string, commandPtrServer> _server_commands;
+
 	public:
+
 		Server(int port, std::string password, std::string name);
 		~Server();
 		Server(const Server& other);

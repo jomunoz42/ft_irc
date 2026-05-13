@@ -2,7 +2,8 @@
 #include "irc.hpp"
 
 Server::Server(int port, std::string password, std::string name) : _port(port), _server_running(false), _password(password), \
- _server_name(name) {
+ _server_name(name) 
+{
 	std::memset(&this->_ip_address, 0, sizeof(this->_ip_address));
 	this->_server_commands.insert(std::make_pair("PASS", &Server::commandPass));
 	this->_server_commands.insert(std::make_pair("NICK", &Server::commandNick));
@@ -28,8 +29,10 @@ _buffer(other._buffer), _password(other._password), _ip_address(other._ip_addres
 _clients(other._clients), _signal_handler(other._signal_handler), _socket_list(other._socket_list), _errors(other._errors), \
 _replies(other._replies), _channels(other._channels), _server_commands(other._server_commands) {}
 
-Server& Server::operator=(const Server& other) {
-	if (this != &other) {
+Server& Server::operator=(const Server& other) 
+{
+	if (this != &other) 
+	{
 		this->_port = other._port;
 		this->_socket = other._socket;
 		this->_server_running = other._server_running;

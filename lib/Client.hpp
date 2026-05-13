@@ -4,7 +4,8 @@
 
 # include "irc.hpp"
 
-class Client {
+class Client 
+{
 	private:
 		int _socket;
 		std::string _nickname;

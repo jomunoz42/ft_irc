@@ -10,7 +10,8 @@ _recv_buffer(other._recv_buffer), _send_buffer(other._send_buffer), _channels(ot
 _pass_accepted(other._pass_accepted), _has_nickname(other._has_nickname), _has_username(other._has_username), \
 _registered(other._registered) {}
 
-Client& Client::operator=(const Client& other) {
+Client& Client::operator=(const Client& other) 
+{
 	if (this != &other) {
 		this->_socket = other._socket;
 		this->_nickname = other._nickname;

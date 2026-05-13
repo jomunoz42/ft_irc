@@ -1,10 +1,33 @@
 
 NAME = ircserv
-SRCS = main.cpp src/Channel.cpp src/Client.cpp src/Server.cpp src/utils.cpp
+
+SRCS = main.cpp \
+	src/Channel/Channel.cpp \
+	src/Channel/ChannelGet.cpp \
+	src/Channel/ChannelSet.cpp \
+	src/Channel/ChannelUser.cpp \
+	src/Client/Client.cpp \
+	src/Client/ClientGet.cpp \
+	src/Client/ClientRegister.cpp \
+	src/Client/ClientSet.cpp \
+	src/Server/Server.cpp \
+	src/Server/ServerClient.cpp \
+	src/Server/ServerCommands.cpp \
+	src/Server/ServerGet.cpp \
+	src/Server/ServerInput.cpp \
+	src/Server/ServerOutput.cpp \
+	src/Server/ServerService.cpp \
+	src/Server/ServerSockets.cpp \
+	src/utils.cpp
+
 OBJ_DIR = build
+
 OBJS = $(SRCS:%.cpp=$(OBJ_DIR)/%.o)
+
 CPP = c++
+
 CPPFLAGS = -g -Wall -Wextra -Werror -std=c++98
+
 INCLUDE = -Ilib
 
 all: $(NAME)
@@ -14,6 +37,7 @@ $(NAME): $(OBJS)
 	@echo "Executable created!"
 
 $(OBJ_DIR)/%.o: %.cpp | $(OBJ_DIR)
+	@mkdir -p $(dir $@)
 	@$(CPP) $(CPPFLAGS) $(INCLUDE) -c $< -o $@
 
 $(OBJ_DIR):

@@ -1,26 +1,31 @@
 
 #include "irc.hpp"
 
-void Server::start(void) {
+void Server::start(void) 
+{
 	this->_socket = socket(AF_INET, SOCK_STREAM, 0);
-	if (this->_socket < 0) {
+	if (this->_socket < 0) 
+	{
 		std::string error = std::strerror(errno);
 		throw std::runtime_error(std::string("socket() failed: ") + error);
 	}
 	this->setNonBlocking(this->_socket);
 	int opt = 1;
-	if (setsockopt(this->_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+	if (setsockopt(this->_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) 
+	{
 		std::string error = std::strerror(errno);
 		throw std::runtime_error(std::string("setsockopt() failed: ") + error);
 	}
 	this->_ip_address.sin_family = AF_INET;
 	this->_ip_address.sin_port = htons(this->_port);
 	this->_ip_address.sin_addr.s_addr = INADDR_ANY;
-	if (bind(this->_socket, reinterpret_cast<sockaddr*>(&this->_ip_address), sizeof(this->_ip_address)) < 0) {
+	if (bind(this->_socket, reinterpret_cast<sockaddr*>(&this->_ip_address), sizeof(this->_ip_address)) < 0) 
+	{
 		std::string error = std::strerror(errno);
 		throw std::runtime_error(std::string("bind() failed: ") + error);
 	}
-	if (listen(this->_socket, 100) < 0) {
+	if (listen(this->_socket, 100) < 0) 
+	{
 		std::string error = std::strerror(errno);
 		throw std::runtime_error(std::string("listen() failed: ") + error);
 	}
@@ -29,28 +34,34 @@ void Server::start(void) {
 	std::cout << "IRC Server is setup!" << std::endl;
 }
 
-void Server::run(void) {
+void Server::run(void) 
+{
 	std::cout << "IRC Server is running!" << std::endl;
-	while (this->_server_running) {
-		if (poll(this->_socket_list.data(), this->_socket_list.size(), -1) < 0) {
+	while (this->_server_running) 
+	{
+		if (poll(this->_socket_list.data(), this->_socket_list.size(), -1) < 0) 
+		{
 			std::string error = std::strerror(errno);
 			throw std::runtime_error(std::string("poll() failed: ") + error);
 		}
 		if (this->getPollfd(this->_socket).revents & POLLIN)
 			this->addClient();
-		for (std::map<int, Client>::iterator i = this->_clients.begin(); i != this->_clients.end(); ) {
+		for (std::map<int, Client>::iterator i = this->_clients.begin(); i != this->_clients.end(); ) 
+		{
 			e_data ret;
 			Client &client = i->second;
 			std::map<int, Client>::iterator next = i; ++next;
 			bool remove = false;
-			if (this->getPollfd(client.getSocket()).revents & POLLIN) {
+			if (this->getPollfd(client.getSocket()).revents & POLLIN) 
+			{
 				ret = this->receiveClientData(client);
 				if (ret == SUCCESS)
 					this->processData(client);
 				else if (ret == DISCONNECTED || ret == ERROR)
 					remove = true;
 			}
-			if (!remove && this->getPollfd(client.getSocket()).revents & POLLOUT) {
+			if (!remove && this->getPollfd(client.getSocket()).revents & POLLOUT) 
+			{
 				ret = this->flushSendBuffer(client);
 				if (ret == DISCONNECTED || ret == ERROR)
 					remove = true;
@@ -62,7 +73,8 @@ void Server::run(void) {
 	}
 }
 
-void Server::stop(void) {
+void Server::stop(void) 
+{
 	this->_server_running = false;
 	close(this->_socket);
 	for (std::map<int, Client>::iterator i = this->_clients.begin(); i != this->_clients.end(); ++i) {

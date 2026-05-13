@@ -13,7 +13,8 @@ Channel::~Channel() {}
 Channel::Channel(const Channel& other) : _channel_name(other._channel_name), _channel_topic(other._channel_topic), \
 _channel_password(other._channel_password), _users(other._users), _operators(other._operators), _channel_commands(other._channel_commands) {}
 
-Channel& Channel::operator=(const Channel& other) {
+Channel& Channel::operator=(const Channel& other) 
+{
 	if (this != &other) {
 		this->_channel_name = other._channel_name;
 		this->_channel_topic = other._channel_topic;

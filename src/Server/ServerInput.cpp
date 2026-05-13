@@ -1,14 +1,17 @@
 
 #include "irc.hpp"
 
-e_data Server::receiveClientData(Client &client) {
+e_data Server::receiveClientData(Client &client) 
+{
 	char tmp[1024];
 	int client_socket = client.getSocket();
 	std::string &buffer = client.getRecvBuffer();
 	std::cout << "IRC Server has received data!" << std::endl;
-	while (true) {
+	while (true) 
+	{
 		ssize_t bytes = recv(client_socket, tmp, sizeof(tmp), 0);
-		if (bytes > 0) {
+		if (bytes > 0) 
+		{
 			buffer += std::string(tmp, bytes);
 			return (SUCCESS);
 		}
@@ -22,10 +25,12 @@ e_data Server::receiveClientData(Client &client) {
 	}
 }
 
-void Server::processData(Client &client) {
+void Server::processData(Client &client) 
+{
 	size_t pos;
 	std::string &buffer = client.getRecvBuffer();
-	while ((pos = buffer.find(DELIMITER)) != std::string::npos) {
+	while ((pos = buffer.find(DELIMITER)) != std::string::npos) 
+	{
 		std::cout << "IRC Server is processing the data!" << std::endl;
 		std::string line = buffer.substr(0, pos);
 		buffer.erase(0, pos + 2);
@@ -33,11 +38,12 @@ void Server::processData(Client &client) {
 	}
 }
 
-void Server::processCommand(Client &client, std::string &line) {
-
+void Server::processCommand(Client &client, std::string &line) 
+{
 	size_t pos = line.find(':');
 	std::string message;
-	if (pos != std::string::npos) {
+	if (pos != std::string::npos) 
+	{
 		message = line.substr(pos + 1);
 		line.erase(pos);
 	}
