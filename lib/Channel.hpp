@@ -22,9 +22,10 @@ class Channel
 	public:
 	
 		Channel(std::string name);
-		~Channel();
 		Channel(const Channel& other);
 		Channel& operator=(const Channel& other);
+		~Channel();
+
 		void setTopic(const std::string new_topic);
 		std::string getTopic(void) const;
 		std::vector<Client*> getUsers(void);

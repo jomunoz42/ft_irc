@@ -12,7 +12,8 @@ _registered(other._registered) {}
 
 Client& Client::operator=(const Client& other) 
 {
-	if (this != &other) {
+	if (this != &other) 
+	{
 		this->_socket = other._socket;
 		this->_nickname = other._nickname;
 		this->_username = other._username;

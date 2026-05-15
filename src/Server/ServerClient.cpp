@@ -15,7 +15,7 @@ void Server::addClient(void)
 	std::cout << "Client Socket: " << client_socket << " has connected to IRC Server!" << std::endl;
 }
 
-void Server::removeClient(Client &client) 
+void Server::removeClient(Client &client)
 {
 	int client_socket = client.getSocket();
 	std::vector<std::string> &channels = client.getChannels();

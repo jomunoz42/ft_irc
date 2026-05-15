@@ -52,6 +52,8 @@ void Server::processCommand(Client &client, std::string &line)
 		args.push_back(message);
 	std::cout << "IRC Server is processing the command!" << std::endl;
 	std::string command = args.at(0);
+	if (args.empty())
+		return;
 	std::map<std::string, commandPtrServer>::iterator i = this->_server_commands.find(command);
 	if (i == this->_server_commands.end())
 		return (this->sendError(client, ERR_UNKNOWNCOMMAND, command));

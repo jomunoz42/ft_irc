@@ -25,7 +25,7 @@ void Server::sendMessage(Client &client, std::string &message)
 
 e_data Server::flushSendBuffer(Client &client) 
 {
-	std::string send_buffer = client.getSendBuffer();
+	std::string &send_buffer = client.getSendBuffer();
 	ssize_t bytes = send(client.getSocket(), send_buffer.c_str(), send_buffer.size(), 0);
 	if (bytes > 0) 
 	{

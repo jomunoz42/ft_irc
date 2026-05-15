@@ -23,16 +23,17 @@ int main(int ac, char **av)
 	server_name.erase(0, 2);
 	Server irc(port, av[2], server_name);
 
-	try 
+	try
 	{
 		irc.start();
 		irc.run();
 	}
-	catch (const std::exception &e) 
+	catch (const std::exception &e)
 	{
 		std::cerr << e.what() << std::endl;
 		irc.stop();
+		return (1);
 	}
-	
+
 	return (0);
 }

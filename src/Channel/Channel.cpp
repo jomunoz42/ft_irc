@@ -15,7 +15,8 @@ _channel_password(other._channel_password), _users(other._users), _operators(oth
 
 Channel& Channel::operator=(const Channel& other) 
 {
-	if (this != &other) {
+	if (this != &other) 
+	{
 		this->_channel_name = other._channel_name;
 		this->_channel_topic = other._channel_topic;
 		this->_channel_password = other._channel_password;

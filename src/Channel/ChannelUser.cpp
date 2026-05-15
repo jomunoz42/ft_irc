@@ -11,7 +11,8 @@ void Channel::removeUser(Client &client)
 {
 	for (std::vector<Client*>::iterator i = this->_users.begin(); i != this->_users.end(); ++i) 
 	{
-		if (*i == &client) {
+		if (*i == &client) 
+		{
 			this->_users.erase(i);
 			std::cout << "User " << client.getNickname() << " has been removed from " << this->_channel_name << std::endl;
 			break ;
@@ -29,7 +30,8 @@ void Channel::removeOperator(Client &client)
 {
 	for (std::vector<Client*>::iterator j = this->_operators.begin(); j != this->_operators.end(); ++j) 
 	{
-		if (*j == &client) {
+		if (*j == &client) 
+		{
 			this->_operators.erase(j);
 			std::cout << "User " << client.getNickname() << " is no longer an operator in " << this->_channel_name << std::endl;
 			break ;
