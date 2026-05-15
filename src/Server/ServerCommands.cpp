@@ -60,6 +60,27 @@ void Server::commandJoin(Client &client, std::vector<std::string> &args)
 		return (this->sendError(client, ERR_NEEDMOREPARAMS, args.at(0)));
 	if (!client.isRegistered())
 		return (this->sendError(client, ERR_NOTREGISTERED, args.at(0)));
+
+	std::string channelName = args[1];
+
+	std::map<std::string, Channel>::iterator it = this->_channels.find(channelName);
+
+	if (it == this->_channels.end())
+	{
+		this->_channels.insert(std::make_pair(channelName, Channel(channelName)));
+		it = this->_channels.find(channelName);
+
+		it->second.addOperator(client);
+
+		std::cout << "Created channel: " << channelName << std::endl;
+	}
+
+	it->second.addUser(client);
+
+	std::cout << client.getNickname()
+			  << " joined "
+			  << channelName
+			  << std::endl;
 }
 
 void Server::commandPrivmsg(Client &client, std::vector<std::string> &args) 

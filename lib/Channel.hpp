@@ -12,11 +12,11 @@ class Channel
 {
 	private:
 
-		std::string _channel_name;
-		std::string _channel_topic;
-		std::string _channel_password;
-		std::vector<Client*> _users;
-		std::vector<Client*> _operators;
+		std::string 			_channel_name;
+		std::string 			_channel_topic;
+		std::string 			_channel_password;
+		std::vector<Client*> 	_users;
+		std::vector<Client*> 	_operators;
 		std::map<std::string, commandPtrChannel> _channel_commands;
 
 	public:
@@ -26,18 +26,18 @@ class Channel
 		Channel& operator=(const Channel& other);
 		~Channel();
 
-		void setTopic(const std::string new_topic);
-		std::string getTopic(void) const;
+		void 				 setTopic(const std::string new_topic);
+		std::string 		 getTopic(void) const;
 		std::vector<Client*> getUsers(void);
-		std::string getNameList(void) const;
-		void addUser(Client &client);
-		void removeUser(Client &client);
-		void addOperator(Client &client);
-		void removeOperator(Client &client);
-		// void commandKick(std::string user);
-		// void commandInvite(std::string user);
-		// void commandTopic(std::string new_topic);
-		// void commandMode(std::string new_mode);
+		std::string 		 getNameList(void) const;
+		void 				 addUser(Client &client);
+		void 				 removeUser(Client &client);
+		void 				 addOperator(Client &client);
+		void 				 removeOperator(Client &client);
+		// void 			 commandKick(std::string user);
+		// void 			 commandInvite(std::string user);
+		// void 			 commandTopic(std::string new_topic);
+		// void 			 commandMode(std::string new_mode);
 };
 
 #endif
