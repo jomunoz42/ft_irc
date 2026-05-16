@@ -3,8 +3,6 @@ NAME = ircserv
 
 SRCS = main.cpp \
 	src/Channel/Channel.cpp \
-	src/Channel/ChannelGet.cpp \
-	src/Channel/ChannelSet.cpp \
 	src/Channel/ChannelUser.cpp \
 	src/Client/Client.cpp \
 	src/Client/ClientGet.cpp \
