@@ -55,10 +55,12 @@ class Server
 		e_data 		flushSendBuffer(Client &client);
 		e_data 		receiveClientData(Client &client);
 		void 		processCommand(Client &client, std::string &line);
+		
 		void 		broadcastMessage(Channel &channel, std::string &message, Client *exclude);
 		void 		sendMessage(Client &client, std::string &message);
 		void 		sendError(Client &client, int code, std::string &command);
 		void 		sendReply(Client &client, int code, std::string &message);
+		
 		void 		commandPass(Client &client, std::vector<std::string> &args);
 		void 		commandNick(Client &client, std::vector<std::string> &args);
 		void 		commandUser(Client &client, std::vector<std::string> &args);

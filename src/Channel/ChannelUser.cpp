@@ -3,8 +3,16 @@
 
 void Channel::addUser(Client &client) 
 {
+	if (this->hasUser(client))
+		return ;
+
 	this->_users.push_back(&client);
-	std::cout << "User " << client.getNickname() << " has been added to " << this->_channel_name << std::endl;
+
+	std::cout << "User " 
+			  << client.getNickname() 
+			  << " has been added to " 
+			  << this->_channel_name 
+			  << std::endl;
 }
 
 void Channel::removeUser(Client &client) 
@@ -22,8 +30,16 @@ void Channel::removeUser(Client &client)
 
 void Channel::addOperator(Client &client) 
 {
+	if (this->hasUser(client))
+		return ;
+
 	this->_operators.push_back(&client);
-	std::cout << "User " << client.getNickname() << " is now an operator in " << this->_channel_name << std::endl;
+
+	std::cout << "User " 
+			  << client.getNickname() 
+			  << " is now an operator in " 
+			  << this->_channel_name 
+			  << std::endl;
 }
 
 void Channel::removeOperator(Client &client) 
@@ -37,4 +53,14 @@ void Channel::removeOperator(Client &client)
 			break ;
 		}
 	}
+}
+
+bool Channel::hasUser(Client &client)
+{
+	for (size_t i = 0; i < this->_users.size(); ++i)
+	{
+		if (this->_users[i] == &client)
+			return (true);
+	}
+	return (false);
 }

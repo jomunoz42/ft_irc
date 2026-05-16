@@ -56,6 +56,10 @@ void Server::commandUser(Client &client, std::vector<std::string> &args) {
 
 void Server::commandJoin(Client &client, std::vector<std::string> &args) 
 {
+	std::cout << "ARGS SIZE: " << args.size() << std::endl;
+	for (size_t i = 0; i < args.size(); ++i)
+		std::cout << "[" << i << "] = " << args[i] << std::endl;
+
 	if (args.size() < 2)
 		return (this->sendError(client, ERR_NEEDMOREPARAMS, args.at(0)));
 	if (!client.isRegistered())
@@ -89,4 +93,44 @@ void Server::commandPrivmsg(Client &client, std::vector<std::string> &args)
 		return (this->sendError(client, ERR_NEEDMOREPARAMS, args.at(0)));
 	if (!client.isRegistered())
 		return (this->sendError(client, ERR_NOTREGISTERED, args.at(0)));
+
+	std::string target = args[1];
+	std::string message = args[2];
+
+	if (target.empty() || message.empty())
+		return (this->sendError(client, ERR_NEEDMOREPARAMS, args.at(0)));
+
+	std::string fullMessage = ":" + client.getNickname()
+		+ " PRIVMSG " + target + " :" + message + "\r\n";
+
+	if (target[0] == '#')
+	{
+		std::map<std::string, Channel>::iterator channelIt = this->_channels.find(target);
+
+		if (channelIt == this->_channels.end())
+			return (this->sendError(client, ERR_NOSUCHCHANNEL, target));
+
+		Channel &channel = channelIt->second;
+
+		if (!channel.hasUser(client))
+			return (this->sendError(client, ERR_NOTONCHANNEL, target));
+
+		this->broadcastMessage(channel, fullMessage, &client);
+	}
+	else
+	{
+		std::map<int, Client>::iterator it = this->_clients.begin();
+
+		while (it != this->_clients.end())
+		{
+			if (it->second.getNickname() == target)
+			{
+				this->sendMessage(it->second, fullMessage);
+				return;
+			}
+			++it;
+		}
+		return (this->sendError(client, ERR_NOSUCHNICK, target));
+	}
 }
+

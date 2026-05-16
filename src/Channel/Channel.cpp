@@ -1,14 +1,19 @@
 
 #include "irc.hpp"
 
-Channel::Channel(std::string name) : _channel_name(name) {
+Channel::Channel(std::string name)
+	: _channel_name(name),
+	  _invite_only(false),
+	  _topic_restricted(false),
+	  _has_password(false),
+	  _has_limit(false),
+	  _user_limit(0)
+{
 	// this->_channel_commands.insert(std::make_pair("KICK", commandKick));
 	// this->_channel_commands.insert(std::make_pair("INVITE", commandInvite));
 	// this->_channel_commands.insert(std::make_pair("TOPIC", commandTopic));
 	// this->_channel_commands.insert(std::make_pair("MODE", commandMode));
 }
-
-Channel::~Channel() {}
 
 Channel::Channel(const Channel& other) : _channel_name(other._channel_name), _channel_topic(other._channel_topic), \
 _channel_password(other._channel_password), _users(other._users), _operators(other._operators), _channel_commands(other._channel_commands) {}
@@ -26,3 +31,5 @@ Channel& Channel::operator=(const Channel& other)
 	}
 	return (*this);
 }
+
+Channel::~Channel() {}

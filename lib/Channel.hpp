@@ -17,6 +17,12 @@ class Channel
 		std::string 			_channel_password;
 		std::vector<Client*> 	_users;
 		std::vector<Client*> 	_operators;
+		bool 					_invite_only;
+		bool 					_topic_restricted;
+		bool 					_has_password;
+		bool 					_has_limit;
+		size_t					_user_limit;
+
 		std::map<std::string, commandPtrChannel> _channel_commands;
 
 	public:
@@ -30,10 +36,13 @@ class Channel
 		std::string 		 getTopic(void) const;
 		std::vector<Client*> getUsers(void);
 		std::string 		 getNameList(void) const;
+
 		void 				 addUser(Client &client);
 		void 				 removeUser(Client &client);
 		void 				 addOperator(Client &client);
 		void 				 removeOperator(Client &client);
+		bool 				 hasUser(Client &client);
+
 		// void 			 commandKick(std::string user);
 		// void 			 commandInvite(std::string user);
 		// void 			 commandTopic(std::string new_topic);

@@ -20,6 +20,10 @@ Server::Server(int port, std::string password, std::string name) : _port(port), 
 	this->_replies.insert(std::make_pair(RPL_YOURHOST, "Your host is " + this->_server_name));
 	this->_replies.insert(std::make_pair(RPL_NOTOPIC, "No topic is set"));
 	this->_replies.insert(std::make_pair(RPL_ENDOFNAMES, "End of /NAMES list"));
+	this->_errors.insert(std::make_pair(ERR_NOSUCHNICK, "No such nick"));
+	this->_errors.insert(std::make_pair(ERR_NOSUCHCHANNEL, "No such channel"));
+	this->_errors.insert(std::make_pair(ERR_NOTONCHANNEL, "You're not on that channel"));
+	
 }
 
 Server::~Server(void) {}
