@@ -27,3 +27,40 @@ Client& Client::operator=(const Client& other)
 	}
 	return (*this);
 }
+
+std::string Client::getNickname(void) const {return (this->_nickname);}
+
+std::string Client::getUsername(void) const {return (this->_username);}
+
+int Client::getSocket(void) const {return (this->_socket);}
+
+std::string &Client::getRecvBuffer(void) {return (this->_recv_buffer);}
+
+std::string &Client::getSendBuffer(void) {return (this->_send_buffer);}
+
+std::vector<std::string> &Client::getChannels(void) {return (this->_channels);}
+
+std::string Client::getPrefix(const std::string host) const 
+{
+	return (this->_nickname + "!" + this->_username + "@" + host);
+}
+
+void Client::setNickname(const std::string nickname) 
+{
+	if (!nickname.empty()) 
+	{
+		std::cout << "Client socket: " << this->_socket << " nickname has been set to " << nickname << std::endl;
+		this->_nickname = nickname;
+		this->_has_nickname = true;
+	}
+}
+
+void Client::setUsername(const std::string username) 
+{
+	if (!username.empty()) 
+	{
+		std::cout << "Client socket: " << this->_socket << " username has been set to " << username << std::endl;
+		this->_username = username;
+		this->_has_username = true;
+	}
+}

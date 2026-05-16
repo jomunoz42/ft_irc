@@ -5,9 +5,7 @@ SRCS = main.cpp \
 	src/Channel/Channel.cpp \
 	src/Channel/ChannelUser.cpp \
 	src/Client/Client.cpp \
-	src/Client/ClientGet.cpp \
 	src/Client/ClientRegister.cpp \
-	src/Client/ClientSet.cpp \
 	src/Server/Server.cpp \
 	src/Server/ServerClient.cpp \
 	src/Server/ServerCommands.cpp \
