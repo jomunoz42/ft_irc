@@ -48,9 +48,9 @@ void Server::processCommand(Client &client, std::string &line)
 	std::vector<std::string> args = split(line, " ");
 	if (!message.empty())
 		args.push_back(message);
-	std::string command = args.at(0);
 	if (args.empty())
 		return;
+	std::string command = args.at(0);
 	std::map<std::string, commandPtrServer>::iterator i = this->_server_commands.find(command);
 	if (i == this->_server_commands.end())
 		return (this->sendError(client, ERR_UNKNOWNCOMMAND, command));
