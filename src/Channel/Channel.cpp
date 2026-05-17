@@ -16,6 +16,7 @@ Channel::Channel(const Channel& other)
 		  _channel_password(other._channel_password),
 		  _users(other._users),
 		  _operators(other._operators),
+		  _invited(other._invited),
 		  _invite_only(other._invite_only),
 		  _topic_restricted(other._topic_restricted),
 		  _has_password(other._has_password),
@@ -32,6 +33,7 @@ Channel& Channel::operator=(const Channel& other)
 		this->_channel_password = other._channel_password;
 		this->_users = other._users;
 		this->_operators = other._operators;
+		this->_invited = other._invited;
 		this->_invite_only = other._invite_only;
 		this->_topic_restricted = other._topic_restricted;
 		this->_has_password = other._has_password;

@@ -68,7 +68,7 @@ class Server
 		void 		commandPrivmsg(Client &client, std::vector<std::string> &args);
 
 		void 		commandKick(Client &client, std::vector<std::string> &args);
-		// void 		commandInvite(Client &client, std::vector<std::string> &args);
+		void 		commandInvite(Client &client, std::vector<std::string> &args);
 		void 		commandTopic(Client &client, std::vector<std::string> &args);
 		void 		commandMode(Client &client, std::vector<std::string> &args);
 

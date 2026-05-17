@@ -13,6 +13,7 @@ class Channel
 		std::string 			_channel_password;
 		std::vector<Client*> 	_users;
 		std::vector<Client*> 	_operators;
+		std::vector<Client*> 	_invited;
 		bool 					_invite_only;
 		bool 					_topic_restricted;
 		bool 					_has_password;
@@ -51,6 +52,10 @@ class Channel
 		void 				 addOperator(Client &client);
 		void 				 removeOperator(Client &client);
 		bool 				 hasOperator(Client &client);
+
+		void 				 addInvited(Client &client);
+		void 				 removeInvited(Client &client);
+		bool 				 hasInvited(Client &client);
 };
 
 #endif

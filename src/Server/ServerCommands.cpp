@@ -83,7 +83,12 @@ void Server::commandJoin(Client &client, std::vector<std::string> &args)
 	if (it->second.hasLimit() && it->second.getUsers().size() >= it->second.getUserLimit())
 		return (this->sendError(client, ERR_CHANNELISFULL, chName));
 
+	if (it->second.isInviteOnly() && !it->second.hasInvited(client))
+		return (this->sendError(client, ERR_INVITEONLYCHAN, chName));
+
 	it->second.addUser(client);
+
+	it->second.removeInvited(client);
 }
 
 void Server::commandPrivmsg(Client &client, std::vector<std::string> &args) 
@@ -175,19 +180,51 @@ void Server::commandKick(Client &client, std::vector<std::string> &args)
 	channel.removeOperator(it->second);
 }
 
-// void Server::commandInvite(Client &client, std::vector<std::string> &args) 
-// {
-	// INVITE nick #channel
+void Server::commandInvite(Client &client, std::vector<std::string> &args) 
+{
+	std::cout << "ARGS SIZE: " << args.size() << std::endl;
+	for (size_t i = 0; i < args.size(); ++i)
+		std::cout << "[" << i << "] = " << args[i] << std::endl;
 
-    // 1. check registered
-	// 2. check enough args
-	// 3. find target nick
-	// 4. find channel
-	// 5. check inviter is in channel
-	// 6. check inviter is operator
-	// 7. mark target as invited
-	// 8. send invite message to target
-// }
+	if (args.size() < 3)
+		return (this->sendError(client, ERR_NEEDMOREPARAMS, args.at(0)));
+	if (!client.isRegistered())
+		return (this->sendError(client, ERR_NOTREGISTERED, args.at(0)));
+
+	std::string target = args[1], chName = args[2];
+
+	std::map<std::string, Channel>::iterator channelIt = this->_channels.find(chName);
+
+	if (channelIt == this->_channels.end())
+		return (this->sendError(client, ERR_NOSUCHCHANNEL, chName));
+
+	Channel &channel = channelIt->second;
+
+	if (!channel.hasUser(client))
+		return (this->sendError(client, ERR_NOTONCHANNEL, chName));
+	if (!channel.hasOperator(client))
+		return (this->sendError(client, ERR_CHANOPRIVSNEEDED, chName));
+
+    std::map<int, Client>::iterator it = this->_clients.begin();
+	while (it != this->_clients.end())
+	{
+		if (it->second.getNickname() == target)
+			break ;
+		++it;
+	}
+
+	if (it == this->_clients.end())
+		return (this->sendError(client, ERR_NOSUCHNICK, target));
+
+	if (channel.hasUser(it->second))	return ;
+
+	channel.addInvited(it->second);
+
+	std::string message = ":" + client.getNickname()
+		+ " INVITE " + target + " " + chName + "\r\n";
+
+	this->sendMessage(it->second, message);
+}
 
 void Server::commandTopic(Client &client, std::vector<std::string> &args) 
 {
@@ -235,10 +272,6 @@ void Server::commandTopic(Client &client, std::vector<std::string> &args)
 
 void Server::commandMode(Client &client, std::vector<std::string> &args) 
 {
-	std::cout << "ARGS SIZE: " << args.size() << std::endl;
-	for (size_t i = 0; i < args.size(); ++i)
-		std::cout << "[" << i << "] = " << args[i] << std::endl;
-
 	if (args.size() < 3)
 		return (this->sendError(client, ERR_NEEDMOREPARAMS, args.at(0)));
 	if (!client.isRegistered())
@@ -340,13 +373,6 @@ void Server::commandMode(Client &client, std::vector<std::string> &args)
 
 
 
-
-
-
-
-
 // KICK
-// when kicking if channel has only 1 user that user should become operator?
-// when kicking if chanel is already created but has no user that user 
-// should become operator?
-// if there is just a user on that channel he isn t chanel operator??
+// when kicking a use if channel ends up having only 1 
+// user that user should become operator?

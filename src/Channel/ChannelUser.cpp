@@ -62,3 +62,33 @@ bool Channel::hasOperator(Client &client)
 	}
 	return (false);
 }
+
+void 	Channel::addInvited(Client &client)
+{
+	if (this->hasInvited(client))
+		return ;
+
+	this->_invited.push_back(&client);
+}
+
+void 	Channel::removeInvited(Client &client)
+{
+	for (std::vector<Client*>::iterator j = this->_invited.begin(); j != this->_invited.end(); ++j) 
+	{
+		if (*j == &client) 
+		{
+			this->_invited.erase(j);
+			break ;
+		}
+	}
+}
+
+bool 	Channel::hasInvited(Client &client)
+{
+	for (size_t i = 0; i < this->_invited.size(); ++i)
+	{
+		if (this->_invited[i] == &client)
+			return (true);
+	}
+	return (false);
+}
