@@ -76,9 +76,6 @@ void Server::commandJoin(Client &client, std::vector<std::string> &args)
 
 		it->second.addUser(client);
 		it->second.addOperator(client);
-		
-		std::cout << "Created channel: " << chName << std::endl;
-		std::cout << client.getNickname() << " joined " << chName << std::endl;
 	}
 
 	if (it->second.hasUser(client)) return ;
@@ -87,8 +84,6 @@ void Server::commandJoin(Client &client, std::vector<std::string> &args)
 		return (this->sendError(client, ERR_CHANNELISFULL, chName));
 
 	it->second.addUser(client);
-
-	std::cout << client.getNickname() << " joined " << chName << std::endl;
 }
 
 void Server::commandPrivmsg(Client &client, std::vector<std::string> &args) 

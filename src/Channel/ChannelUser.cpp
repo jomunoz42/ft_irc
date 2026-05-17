@@ -7,12 +7,6 @@ void Channel::addUser(Client &client)
 		return ;
 
 	this->_users.push_back(&client);
-
-	std::cout << "User " 
-			  << client.getNickname() 
-			  << " has been added to " 
-			  << this->_channel_name 
-			  << std::endl;
 }
 
 void Channel::removeUser(Client &client) 
@@ -22,7 +16,6 @@ void Channel::removeUser(Client &client)
 		if (*i == &client) 
 		{
 			this->_users.erase(i);
-			std::cout << "User " << client.getNickname() << " has been removed from " << this->_channel_name << std::endl;
 			break ;
 		}
 	}
@@ -46,12 +39,6 @@ void Channel::addOperator(Client &client)
 		return ;
 
 	this->_operators.push_back(&client);
-
-	std::cout << "User " 
-			  << client.getNickname() 
-			  << " is now an operator in " 
-			  << this->_channel_name 
-			  << std::endl;
 }
 
 void Channel::removeOperator(Client &client) 
@@ -61,7 +48,6 @@ void Channel::removeOperator(Client &client)
 		if (*j == &client) 
 		{
 			this->_operators.erase(j);
-			std::cout << "User " << client.getNickname() << " is no longer an operator in " << this->_channel_name << std::endl;
 			break ;
 		}
 	}

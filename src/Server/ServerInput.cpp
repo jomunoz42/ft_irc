@@ -6,7 +6,6 @@ e_data Server::receiveClientData(Client &client)
 	char tmp[1024];
 	int client_socket = client.getSocket();
 	std::string &buffer = client.getRecvBuffer();
-	std::cout << "IRC Server has received data!" << std::endl;
 	while (true) 
 	{
 		ssize_t bytes = recv(client_socket, tmp, sizeof(tmp), 0);
@@ -31,7 +30,6 @@ void Server::processData(Client &client)
 	std::string &buffer = client.getRecvBuffer();
 	while ((pos = buffer.find(DELIMITER)) != std::string::npos) 
 	{
-		std::cout << "IRC Server is processing the data!" << std::endl;
 		std::string line = buffer.substr(0, pos);
 		buffer.erase(0, pos + 2);
 		this->processCommand(client, line);
@@ -50,7 +48,6 @@ void Server::processCommand(Client &client, std::string &line)
 	std::vector<std::string> args = split(line, " ");
 	if (!message.empty())
 		args.push_back(message);
-	std::cout << "IRC Server is processing the command!" << std::endl;
 	std::string command = args.at(0);
 	if (args.empty())
 		return;
