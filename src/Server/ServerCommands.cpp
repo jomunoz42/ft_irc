@@ -65,26 +65,30 @@ void Server::commandJoin(Client &client, std::vector<std::string> &args)
 	if (!client.isRegistered())
 		return (this->sendError(client, ERR_NOTREGISTERED, args.at(0)));
 
-	std::string channelName = args[1];
+	std::string chName = args[1];
 
-	std::map<std::string, Channel>::iterator it = this->_channels.find(channelName);
+	std::map<std::string, Channel>::iterator it = this->_channels.find(chName);
 
 	if (it == this->_channels.end())
 	{
-		this->_channels.insert(std::make_pair(channelName, Channel(channelName)));
-		it = this->_channels.find(channelName);
+		this->_channels.insert(std::make_pair(chName, Channel(chName)));
+		it = this->_channels.find(chName);
 
+		it->second.addUser(client);
 		it->second.addOperator(client);
-
-		std::cout << "Created channel: " << channelName << std::endl;
+		
+		std::cout << "Created channel: " << chName << std::endl;
+		std::cout << client.getNickname() << " joined " << chName << std::endl;
 	}
+
+	if (it->second.hasUser(client)) return ;
+
+	if (it->second.hasLimit() && it->second.getUsers().size() >= it->second.getUserLimit())
+		return (this->sendError(client, ERR_CHANNELISFULL, chName));
 
 	it->second.addUser(client);
 
-	std::cout << client.getNickname()
-			  << " joined "
-			  << channelName
-			  << std::endl;
+	std::cout << client.getNickname() << " joined " << chName << std::endl;
 }
 
 void Server::commandPrivmsg(Client &client, std::vector<std::string> &args) 
@@ -192,10 +196,6 @@ void Server::commandKick(Client &client, std::vector<std::string> &args)
 
 void Server::commandTopic(Client &client, std::vector<std::string> &args) 
 {
-	std::cout << "ARGS SIZE: " << args.size() << std::endl;
-	for (size_t i = 0; i < args.size(); ++i)
-		std::cout << "[" << i << "] = " << args[i] << std::endl;
-
 	if (args.size() < 2)
 		return (this->sendError(client, ERR_NEEDMOREPARAMS, args.at(0)));
 	if (!client.isRegistered())
@@ -238,63 +238,107 @@ void Server::commandTopic(Client &client, std::vector<std::string> &args)
 	this->broadcastMessage(channel, fullMessage, NULL);
 }
 
-// void Server::commandMode(Client &client, std::vector<std::string> &args) 
-// {
-	// MODE #channel +i
-	// MODE #channel -i
-	// MODE #channel +t
-	// MODE #channel -t
-	// MODE #channel +k password
-	// MODE #channel -k
-	// MODE #channel +o nick
-	// MODE #channel -o nick
-	// MODE #channel +l 10
-	// MODE #channel -l
+void Server::commandMode(Client &client, std::vector<std::string> &args) 
+{
+	std::cout << "ARGS SIZE: " << args.size() << std::endl;
+	for (size_t i = 0; i < args.size(); ++i)
+		std::cout << "[" << i << "] = " << args[i] << std::endl;
 
-    // switch (new_mode)
-    // {
-    //     case 'i':
-    //         if (!isInviteOnly())
-    //             setInviteOnly(true);
-    //         else
-    //             setInviteOnly(false);
-    //         return ;
-    //     case 't':
-    //         if (!isTopicRestricted())
-    //             setTopicRestricted(true);
-    //         else
-    //             setTopicRestricted(false);
-    //         return ;
-    //     case 'k':
-    //         if (!hasPassword())
-    //         {
-    //             setHasPassword(true);
-    //             prompts user limit definition?
-    //             setPassword(   );
-    //         }
-    //         else
-    //             setHasPassword(false);
-    //         return ;
-    //     case 'o':
+	if (args.size() < 3)
+		return (this->sendError(client, ERR_NEEDMOREPARAMS, args.at(0)));
+	if (!client.isRegistered())
+		return (this->sendError(client, ERR_NOTREGISTERED, args.at(0)));
+	
+	std::string chName = args[1], mode = args[2], param = "";
+	if (args.size() >= 4) param = args[3];
 
+	std::map<std::string, Channel>::iterator channelIt = this->_channels.find(chName);
+	if (channelIt == this->_channels.end())
+		return (this->sendError(client, ERR_NOSUCHCHANNEL, chName));
+	Channel &channel = channelIt->second;
 
-    //         if (! operator exists)
-    //             addOperator
-    //         else
-    //             removeOperator
-    //         return ;
-    //     case 'l':
-    //         if (!hasLimit())
-    //         {
-    //             setHasLimit(true);
-    //             prompts user limit definition?
-    //             setUserLimit(   );
-    //         }
-    //         else
-    //             setHasLimit(false);
-    //         return ;
-    // }
-// }
+	if (!channel.hasUser(client))
+		return (this->sendError(client, ERR_NOTONCHANNEL, chName));
+	if (!channel.hasOperator(client))
+		return (this->sendError(client, ERR_CHANOPRIVSNEEDED, chName));
+	
+    if (mode.size() != 2 || (mode[0] != '+' && mode[0] != '-'))
+		return (this->sendError(client, ERR_UNKNOWNMODE, mode));
+
+	bool adding = (mode[0] == '+');
+	char flag = mode[1];
+
+	switch (flag)
+	{
+		case 'i':
+			channel.setInviteOnly(adding);
+			break;
+
+		case 't':
+			channel.setTopicRestricted(adding);
+			break;
+
+		case 'k':
+			if (adding)
+			{
+				if (param.empty())
+					return (this->sendError(client, ERR_NEEDMOREPARAMS, args.at(0)));
+				channel.setHasPassword(true);
+				channel.setPassword(param);
+			}
+			else
+				channel.setHasPassword(false), channel.setPassword("");
+			break;
+
+		case 'l':
+			if (adding)
+			{
+				if (param.empty())
+					return (this->sendError(client, ERR_NEEDMOREPARAMS, args.at(0)));
+				channel.setHasLimit(true);
+				channel.setUserLimit(std::atoi(param.c_str()));
+			}
+			else
+				channel.setHasLimit(false), channel.setUserLimit(0);
+			break;
+
+		case 'o':
+		{
+			if (param.empty())
+				return (this->sendError(client, ERR_NEEDMOREPARAMS, args.at(0)));
+
+			std::map<int, Client>::iterator it = this->_clients.begin();
+			while (it != this->_clients.end())
+			{
+				if (it->second.getNickname() == param)
+					break;
+				++it;
+			}
+
+			if (it == this->_clients.end())
+				return (this->sendError(client, ERR_NOSUCHNICK, param));
+			if (!channel.hasUser(it->second))
+				return (this->sendError(client, ERR_USERNOTINCHANNEL, param));
+
+			if (adding)
+				channel.addOperator(it->second);
+			else
+				channel.removeOperator(it->second);
+			break;
+		}
+		default:
+			return (this->sendError(client, ERR_UNKNOWNMODE, mode));
+	}
+
+	std::string fullMessage = ":" + client.getNickname()
+			+ " MODE " + chName + " " + mode;
+
+	if (!param.empty())
+		fullMessage += " " + param;
+	fullMessage += "\r\n";
+
+	this->broadcastMessage(channel, fullMessage, NULL);
+}
 
 
 

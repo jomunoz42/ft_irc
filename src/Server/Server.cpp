@@ -13,7 +13,7 @@ Server::Server(int port, std::string password, std::string name) : _port(port), 
 	this->_server_commands.insert(std::make_pair("KICK", &Server::commandKick));
 	// this->_server_commands.insert(std::make_pair("INVITE", &Server::commandInvite));
 	this->_server_commands.insert(std::make_pair("TOPIC", &Server::commandTopic));
-	// this->_server_commands.insert(std::make_pair("MODE", &Server::commandMode));
+	this->_server_commands.insert(std::make_pair("MODE", &Server::commandMode));
 	this->_errors.insert(std::make_pair(ERR_UNKNOWNCOMMAND, "Unknown command"));
 	this->_errors.insert(std::make_pair(ERR_ERRONEUSNICKNAME, "Erroneous nickname"));
 	this->_errors.insert(std::make_pair(ERR_NICKNAMEINUSE, "Nickname is already in use"));
@@ -25,6 +25,8 @@ Server::Server(int port, std::string password, std::string name) : _port(port), 
 	this->_errors.insert(std::make_pair(ERR_NOTONCHANNEL, "You're not on that channel"));
 	this->_errors.insert(std::make_pair(ERR_USERNOTINCHANNEL, "User not on that channel"));
 	this->_errors.insert(std::make_pair(ERR_CHANOPRIVSNEEDED, "You're not channel operator"));
+	this->_errors.insert(std::make_pair(ERR_CHANNELISFULL, "Cannot join channel (+l)"));
+	this->_errors.insert(std::make_pair(ERR_UNKNOWNMODE, "is unknown mode char to me"));
 	this->_replies.insert(std::make_pair(RPL_WELCOME, "Welcome to the IRC Network"));
 	this->_replies.insert(std::make_pair(RPL_YOURHOST, "Your host is " + this->_server_name));
 	this->_replies.insert(std::make_pair(RPL_NOTOPIC, "No topic is set"));

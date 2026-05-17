@@ -70,7 +70,7 @@ class Server
 		void 		commandKick(Client &client, std::vector<std::string> &args);
 		// void 		commandInvite(Client &client, std::vector<std::string> &args);
 		void 		commandTopic(Client &client, std::vector<std::string> &args);
-		// void 		commandMode(Client &client, std::vector<std::string> &args);
+		void 		commandMode(Client &client, std::vector<std::string> &args);
 
 		std::string getPrefix(void) const;
 		pollfd&		getPollfd(const int socket);

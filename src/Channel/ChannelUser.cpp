@@ -40,6 +40,8 @@ bool Channel::hasUser(Client &client)
 
 void Channel::addOperator(Client &client) 
 {
+	if (!this->hasUser(client))
+		return ;
 	if (this->hasOperator(client))
 		return ;
 
