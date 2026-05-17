@@ -28,9 +28,9 @@ class Server
 		std::string 			_password;
 		sockaddr_in 			_ip_address;
 		std::string 			_server_name;
-		std::map<int, Client>   		_clients;
 		struct sigaction 				_signal_handler;
 		std::vector<pollfd> 			_socket_list;
+		std::map<int, Client>   		_clients;
 		std::map<int, std::string> 		_errors;
 		std::map<int, std::string> 		_replies;
 		std::map<std::string, Channel>  		_channels;
@@ -55,7 +55,7 @@ class Server
 		e_data 		flushSendBuffer(Client &client);
 		e_data 		receiveClientData(Client &client);
 		void 		processCommand(Client &client, std::string &line);
-		
+
 		void 		broadcastMessage(Channel &channel, std::string &message, Client *exclude);
 		void 		sendMessage(Client &client, std::string &message);
 		void 		sendError(Client &client, int code, std::string &command);
@@ -66,6 +66,11 @@ class Server
 		void 		commandUser(Client &client, std::vector<std::string> &args);
 		void 		commandJoin(Client &client, std::vector<std::string> &args);
 		void 		commandPrivmsg(Client &client, std::vector<std::string> &args);
+
+		void 		commandKick(Client &client, std::vector<std::string> &args);
+		// void 		commandInvite(Client &client, std::vector<std::string> &args);
+		// void 		commandTopic(Client &client, std::vector<std::string> &args);
+		// void 		commandMode(Client &client, std::vector<std::string> &args);
 
 		std::string getPrefix(void) const;
 		pollfd&		getPollfd(const int socket);

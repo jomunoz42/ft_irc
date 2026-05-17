@@ -28,9 +28,19 @@ void Channel::removeUser(Client &client)
 	}
 }
 
+bool Channel::hasUser(Client &client)
+{
+	for (size_t i = 0; i < this->_users.size(); ++i)
+	{
+		if (this->_users[i] == &client)
+			return (true);
+	}
+	return (false);
+}
+
 void Channel::addOperator(Client &client) 
 {
-	if (this->hasUser(client))
+	if (this->hasOperator(client))
 		return ;
 
 	this->_operators.push_back(&client);
@@ -55,11 +65,11 @@ void Channel::removeOperator(Client &client)
 	}
 }
 
-bool Channel::hasUser(Client &client)
+bool Channel::hasOperator(Client &client)
 {
-	for (size_t i = 0; i < this->_users.size(); ++i)
+	for (size_t i = 0; i < this->_operators.size(); ++i)
 	{
-		if (this->_users[i] == &client)
+		if (this->_operators[i] == &client)
 			return (true);
 	}
 	return (false);

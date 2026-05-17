@@ -5,6 +5,7 @@ void Server::commandPass(Client &client, std::vector<std::string> &args)
 {
 	if (args.size() < 2)
 		return (this->sendError(client, ERR_NEEDMOREPARAMS, args.at(0)));
+
 	bool was_registered = client.isRegistered();
 	if (args.at(1) == this->_password)
 		client.passwordAccepted();
@@ -40,11 +41,14 @@ void Server::commandNick(Client &client, std::vector<std::string> &args)
 	}
 }
 
-void Server::commandUser(Client &client, std::vector<std::string> &args) {
+void Server::commandUser(Client &client, std::vector<std::string> &args) 
+{
 	if (args.size() < 2)
 		return (this->sendError(client, ERR_NEEDMOREPARAMS, args.at(0)));
+
 	bool was_registered = client.isRegistered();
 	client.setUsername(args.at(1));
+
 	if (!was_registered)	
 		client.registerClient();
 	if (!was_registered && client.isRegistered()) 
@@ -56,10 +60,6 @@ void Server::commandUser(Client &client, std::vector<std::string> &args) {
 
 void Server::commandJoin(Client &client, std::vector<std::string> &args) 
 {
-	std::cout << "ARGS SIZE: " << args.size() << std::endl;
-	for (size_t i = 0; i < args.size(); ++i)
-		std::cout << "[" << i << "] = " << args[i] << std::endl;
-
 	if (args.size() < 2)
 		return (this->sendError(client, ERR_NEEDMOREPARAMS, args.at(0)));
 	if (!client.isRegistered())
@@ -94,8 +94,7 @@ void Server::commandPrivmsg(Client &client, std::vector<std::string> &args)
 	if (!client.isRegistered())
 		return (this->sendError(client, ERR_NOTREGISTERED, args.at(0)));
 
-	std::string target = args[1];
-	std::string message = args[2];
+	std::string target = args[1], message = args[2];
 
 	if (target.empty() || message.empty())
 		return (this->sendError(client, ERR_NEEDMOREPARAMS, args.at(0)));
@@ -134,3 +133,156 @@ void Server::commandPrivmsg(Client &client, std::vector<std::string> &args)
 	}
 }
 
+void Server::commandKick(Client &client, std::vector<std::string> &args)
+{	
+	if (args.size() < 3)
+		return (this->sendError(client, ERR_NEEDMOREPARAMS, args.at(0)));
+	if (!client.isRegistered())
+		return (this->sendError(client, ERR_NOTREGISTERED, args.at(0)));
+
+	std::string chName = args[1], target = args[2], reason = "";
+	if (args.size() >= 4) reason = " :" + args[3];
+
+	std::map<std::string, Channel>::iterator channelIt = this->_channels.find(chName);
+
+	if (channelIt == this->_channels.end())
+		return (this->sendError(client, ERR_NOSUCHCHANNEL, chName));
+
+	Channel &channel = channelIt->second;
+
+	if (!channel.hasUser(client))
+		return (this->sendError(client, ERR_NOTONCHANNEL, chName));
+	if (!channel.hasOperator(client))
+		return (this->sendError(client, ERR_CHANOPRIVSNEEDED, chName));
+
+	std::map<int, Client>::iterator it = this->_clients.begin();
+	while (it != this->_clients.end())
+	{
+		if (it->second.getNickname() == target)
+			break ;
+		++it;
+	}
+
+	if (it == this->_clients.end())
+		return (this->sendError(client, ERR_NOSUCHNICK, target));
+	if (!channel.hasUser(it->second))
+		return (this->sendError(client, ERR_USERNOTINCHANNEL, target));
+
+	std::string fullMessage = ":" + client.getNickname()
+			+ " KICK " + chName + " "  + target + reason + "\r\n";
+
+	this->broadcastMessage(channel, fullMessage, NULL);
+	channel.removeUser(it->second);
+	channel.removeOperator(it->second);
+}
+
+// void Server::commandInvite(Client &client, std::vector<std::string> &args) 
+// {
+	// INVITE nick #channel
+
+    // 1. check registered
+	// 2. check enough args
+	// 3. find target nick
+	// 4. find channel
+	// 5. check inviter is in channel
+	// 6. check inviter is operator
+	// 7. mark target as invited
+	// 8. send invite message to target
+// }
+
+// void Server::commandTopic(Client &client, std::vector<std::string> &args) 
+// {
+	// std::cout << "ARGS SIZE: " << args.size() << std::endl;
+	// for (size_t i = 0; i < args.size(); ++i)
+	// 	std::cout << "[" << i << "] = " << args[i] << std::endl;
+
+	// TOPIC #channel                 → shows current topic
+	// TOPIC #channel :new topic      → sets new topic
+
+    // if only channel:
+	// 	show current topic
+
+	// if new topic:
+	// 	check user is in channel
+	// 	if +t is enabled, user must be operator
+	// 	set new topic
+	// 	broadcast TOPIC message
+// }
+
+// void Server::commandMode(Client &client, std::vector<std::string> &args) 
+// {
+	// MODE #channel +i
+	// MODE #channel -i
+	// MODE #channel +t
+	// MODE #channel -t
+	// MODE #channel +k password
+	// MODE #channel -k
+	// MODE #channel +o nick
+	// MODE #channel -o nick
+	// MODE #channel +l 10
+	// MODE #channel -l
+
+    // switch (new_mode)
+    // {
+    //     case 'i':
+    //         if (!isInviteOnly())
+    //             setInviteOnly(true);
+    //         else
+    //             setInviteOnly(false);
+    //         return ;
+    //     case 't':
+    //         if (!isTopicRestricted())
+    //             setTopicRestricted(true);
+    //         else
+    //             setTopicRestricted(false);
+    //         return ;
+    //     case 'k':
+    //         if (!hasPassword())
+    //         {
+    //             setHasPassword(true);
+    //             prompts user limit definition?
+    //             setPassword(   );
+    //         }
+    //         else
+    //             setHasPassword(false);
+    //         return ;
+    //     case 'o':
+
+
+    //         if (! operator exists)
+    //             addOperator
+    //         else
+    //             removeOperator
+    //         return ;
+    //     case 'l':
+    //         if (!hasLimit())
+    //         {
+    //             setHasLimit(true);
+    //             prompts user limit definition?
+    //             setUserLimit(   );
+    //         }
+    //         else
+    //             setHasLimit(false);
+    //         return ;
+    // }
+// }
+
+
+
+
+
+
+// PASS pass
+// NICK alice
+// USER alice 0 * :Alice
+// JOIN #test
+
+
+
+
+
+// KICK
+// when kicking if channel has only 1 user that user should become operator?
+// when kicking if chanel is already created but has no user that user 
+// should become operator?
+// if there is just a user on that channel he isn t chanel operator??

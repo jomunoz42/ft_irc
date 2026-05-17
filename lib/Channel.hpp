@@ -4,10 +4,6 @@
 
 # include "irc.hpp"
 
-class Channel;
-
-typedef void (Channel::*commandPtrChannel)(std::string);
-
 class Channel 
 {
 	private:
@@ -23,8 +19,6 @@ class Channel
 		bool 					_has_limit;
 		size_t					_user_limit;
 
-		std::map<std::string, commandPtrChannel> _channel_commands;
-
 	public:
 	
 		Channel(std::string name);
@@ -37,16 +31,27 @@ class Channel
 		std::vector<Client*> getUsers(void);
 		std::string 		 getNameList(void) const;
 
+		bool				 isInviteOnly(void) const;
+		bool				 isTopicRestricted(void) const;
+		bool				 hasPassword(void) const;
+		bool				 hasLimit(void) const;
+		size_t				 getUserLimit(void) const;
+		std::string 		 getPassword(void) const;
+
+		void				 setInviteOnly(bool status);
+		void				 setTopicRestricted(bool status);
+		void				 setHasPassword(bool status);
+		void				 setHasLimit(bool status);
+		void				 setUserLimit(size_t limit);
+		void 				 setPassword(const std::string &password);
+
 		void 				 addUser(Client &client);
 		void 				 removeUser(Client &client);
+		bool 				 hasUser(Client &client);
+		
 		void 				 addOperator(Client &client);
 		void 				 removeOperator(Client &client);
-		bool 				 hasUser(Client &client);
-
-		// void 			 commandKick(std::string user);
-		// void 			 commandInvite(std::string user);
-		// void 			 commandTopic(std::string new_topic);
-		// void 			 commandMode(std::string new_mode);
+		bool 				 hasOperator(Client &client);
 };
 
 #endif

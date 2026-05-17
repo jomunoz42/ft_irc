@@ -35,10 +35,11 @@ class Client
 		std::string 				&getRecvBuffer(void);
 		std::string 				getUsername(void) const;
 		std::string 				getNickname(void) const;
-		void 						setUsername(const std::string username);
 		std::vector<std::string>    &getChannels(void);
-		void 						setNickname(const std::string nickname);
 		std::string 				getPrefix(const std::string host) const;
+
+		void 						setUsername(const std::string username);
+		void 						setNickname(const std::string nickname);
 };
 
 #endif

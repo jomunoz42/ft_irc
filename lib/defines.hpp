@@ -18,8 +18,10 @@
 # define RPL_NAMREPLY 353
 # define RPL_ENDOFNAMES 366
 # define ERR_NOSUCHNICK 401
-# define ERR_NOSUCHCHANNEL 403
-# define ERR_NOTONCHANNEL 442
+#define ERR_NOSUCHCHANNEL 403
+#define ERR_NOTONCHANNEL 442
+#define ERR_USERNOTINCHANNEL 441
+#define ERR_CHANOPRIVSNEEDED 482
 # define ERR_PORT_RANGE "Given port is out of the program's valid range, please try another port!"
 
 #endif
