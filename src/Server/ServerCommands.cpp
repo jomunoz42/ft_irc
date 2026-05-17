@@ -190,24 +190,53 @@ void Server::commandKick(Client &client, std::vector<std::string> &args)
 	// 8. send invite message to target
 // }
 
-// void Server::commandTopic(Client &client, std::vector<std::string> &args) 
-// {
-	// std::cout << "ARGS SIZE: " << args.size() << std::endl;
-	// for (size_t i = 0; i < args.size(); ++i)
-	// 	std::cout << "[" << i << "] = " << args[i] << std::endl;
+void Server::commandTopic(Client &client, std::vector<std::string> &args) 
+{
+	std::cout << "ARGS SIZE: " << args.size() << std::endl;
+	for (size_t i = 0; i < args.size(); ++i)
+		std::cout << "[" << i << "] = " << args[i] << std::endl;
 
-	// TOPIC #channel                 → shows current topic
-	// TOPIC #channel :new topic      → sets new topic
+	if (args.size() < 2)
+		return (this->sendError(client, ERR_NEEDMOREPARAMS, args.at(0)));
+	if (!client.isRegistered())
+		return (this->sendError(client, ERR_NOTREGISTERED, args.at(0)));
 
-    // if only channel:
-	// 	show current topic
+	std::string chName = args[1];
 
-	// if new topic:
-	// 	check user is in channel
-	// 	if +t is enabled, user must be operator
-	// 	set new topic
-	// 	broadcast TOPIC message
-// }
+	std::map<std::string, Channel>::iterator channelIt = this->_channels.find(chName);
+
+	if (channelIt == this->_channels.end())
+		return (this->sendError(client, ERR_NOSUCHCHANNEL, chName));
+
+	Channel &channel = channelIt->second;
+
+	if (!channel.hasUser(client))
+		return (this->sendError(client, ERR_NOTONCHANNEL, chName));
+
+    if (args.size() == 2)
+	{
+		if (channel.getTopic().empty())
+		{
+			std::string msg = chName + " :No topic is set";
+			return (this->sendReply(client, RPL_NOTOPIC, msg));
+		}
+
+		std::string topicMsg = chName + " :" + channel.getTopic();
+		return (this->sendReply(client, RPL_TOPIC, topicMsg));
+	}
+
+	if (channel.isTopicRestricted() && !channel.hasOperator(client))
+		return (this->sendError(client, ERR_CHANOPRIVSNEEDED, chName));
+
+	std::string newTopic = args[2];
+	
+	channel.setTopic(newTopic);
+
+	std::string fullMessage = ":" + client.getNickname()
+		+ " TOPIC " + chName + " :" + newTopic + "\r\n";
+
+	this->broadcastMessage(channel, fullMessage, NULL);
+}
 
 // void Server::commandMode(Client &client, std::vector<std::string> &args) 
 // {
@@ -272,10 +301,6 @@ void Server::commandKick(Client &client, std::vector<std::string> &args)
 
 
 
-// PASS pass
-// NICK alice
-// USER alice 0 * :Alice
-// JOIN #test
 
 
 

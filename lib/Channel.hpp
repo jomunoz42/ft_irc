@@ -25,24 +25,23 @@ class Channel
 		Channel(const Channel& other);
 		Channel& operator=(const Channel& other);
 		~Channel();
-
-		void 				 setTopic(const std::string new_topic);
-		std::string 		 getTopic(void) const;
-		std::vector<Client*> getUsers(void);
-		std::string 		 getNameList(void) const;
-
+		
 		bool				 isInviteOnly(void) const;
 		bool				 isTopicRestricted(void) const;
 		bool				 hasPassword(void) const;
 		bool				 hasLimit(void) const;
 		size_t				 getUserLimit(void) const;
+		std::string 		 getNameList(void) const;
+		std::string 		 getTopic(void) const;
 		std::string 		 getPassword(void) const;
-
+		std::vector<Client*> getUsers(void);
+		
 		void				 setInviteOnly(bool status);
 		void				 setTopicRestricted(bool status);
 		void				 setHasPassword(bool status);
 		void				 setHasLimit(bool status);
 		void				 setUserLimit(size_t limit);
+		void 				 setTopic(const std::string new_topic);
 		void 				 setPassword(const std::string &password);
 
 		void 				 addUser(Client &client);

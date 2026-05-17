@@ -12,7 +12,7 @@ Server::Server(int port, std::string password, std::string name) : _port(port), 
 	this->_server_commands.insert(std::make_pair("PRIVMSG", &Server::commandPrivmsg));
 	this->_server_commands.insert(std::make_pair("KICK", &Server::commandKick));
 	// this->_server_commands.insert(std::make_pair("INVITE", &Server::commandInvite));
-	// this->_server_commands.insert(std::make_pair("TOPIC", &Server::commandTopic));
+	this->_server_commands.insert(std::make_pair("TOPIC", &Server::commandTopic));
 	// this->_server_commands.insert(std::make_pair("MODE", &Server::commandMode));
 	this->_errors.insert(std::make_pair(ERR_UNKNOWNCOMMAND, "Unknown command"));
 	this->_errors.insert(std::make_pair(ERR_ERRONEUSNICKNAME, "Erroneous nickname"));
