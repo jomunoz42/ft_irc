@@ -9,6 +9,7 @@ SRCS = main.cpp \
 	src/Server/Server.cpp \
 	src/Server/ServerClient.cpp \
 	src/Server/ServerCommands.cpp \
+	src/Server/ServerCommandsCh.cpp \
 	src/Server/ServerInput.cpp \
 	src/Server/ServerOutput.cpp \
 	src/Server/ServerService.cpp \

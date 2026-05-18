@@ -25,3 +25,32 @@ void Client::registerClient(void)
 		this->_registered = true;
 	}
 }
+
+void Client::addChannel(const std::string &channel)
+{
+	if (!this->hasChannel(channel))
+		this->_channels.push_back(channel);
+}
+
+void Client::removeChannel(const std::string &channel)
+{
+	for (std::vector<std::string>::iterator it = this->_channels.begin();
+		it != this->_channels.end(); ++it)
+	{
+		if (*it == channel)
+		{
+			this->_channels.erase(it);
+			break;
+		}
+	}
+}
+
+bool Client::hasChannel(const std::string &channel)
+{
+	for (size_t i = 0; i < this->_channels.size(); ++i)
+	{
+		if (this->_channels[i] == channel)
+			return (true);
+	}
+	return (false);
+}

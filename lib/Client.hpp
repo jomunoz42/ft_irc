@@ -40,6 +40,10 @@ class Client
 
 		void 						setUsername(const std::string username);
 		void 						setNickname(const std::string nickname);
+
+		void 						addChannel(const std::string &channel);
+		void 						removeChannel(const std::string &channel);
+		bool 						hasChannel(const std::string &channel);
 };
 
 #endif
