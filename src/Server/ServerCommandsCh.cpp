@@ -40,12 +40,12 @@ void Server::commandKick(Client &client, std::vector<std::string> &args)
 			+ " KICK " + chName + " "  + target + reason + "\r\n";
 
 	this->broadcastMessage(channel, fullMessage, NULL);
+    
 	channel.removeUser(it->second);
+	channel.removeOperator(it->second);
 	it->second.removeChannel(chName);
 	if (channel.getUsers().empty())
 		this->_channels.erase(chName);
-	
-	channel.removeOperator(it->second);
 }
 
 void Server::commandInvite(Client &client, std::vector<std::string> &args) 
