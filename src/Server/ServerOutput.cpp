@@ -5,27 +5,20 @@ void Server::sendMessage(Client &client, std::string &message)
 {
 	if (message.find(DELIMITER) == std::string::npos)
 		message += DELIMITER;
-	ssize_t bytes = send(client.getSocket(), message.c_str(), message.size(), 0);
-	if (bytes < 0) 
-	{
-		if (errno == EWOULDBLOCK) 
-		{
-			client.getSendBuffer() += message;
-			this->getPollfd(client.getSocket()).events |= POLLOUT;
-		}
-		else
-			this->removeClient(client);
-	}
-	else if (static_cast<size_t>(bytes) < message.size()) 
-	{
-		client.getSendBuffer() += message.substr(bytes);
-		this->getPollfd(client.getSocket()).events |= POLLOUT;
-	}
+	
+	client.getSendBuffer() += message;
+	this->getPollfd(client.getSocket()).events |= POLLOUT;
 }
 
 e_data Server::flushSendBuffer(Client &client) 
 {
 	std::string &send_buffer = client.getSendBuffer();
+	if (send_buffer.empty())
+	{
+		this->getPollfd(client.getSocket()).events &= ~POLLOUT;
+		return (SUCCESS);
+	}
+	
 	ssize_t bytes = send(client.getSocket(), send_buffer.c_str(), send_buffer.size(), 0);
 	if (bytes > 0) 
 	{
@@ -36,7 +29,7 @@ e_data Server::flushSendBuffer(Client &client)
 	}
 	if (bytes == 0)
 		return (DISCONNECTED);
-	if (errno == EWOULDBLOCK)
+	if (errno == EAGAIN || errno == EWOULDBLOCK)
 		return (SUCCESS);
 	return (std::cerr << "send() failed: " << std::strerror(errno) << std::endl, ERROR);
 }

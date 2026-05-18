@@ -34,7 +34,7 @@ void Server::commandNick(Client &client, std::vector<std::string> &args)
 	client.setNickname(args.at(1));
 	if (!was_registered)	
 		client.registerClient();
-	if (!was_registered && client.isRegistered()) 
+	if (!was_registered && client.isRegistered())
 	{
 		std::string message = "You are now registered to " + this->_server_name;
 		this->sendMessage(client, message);

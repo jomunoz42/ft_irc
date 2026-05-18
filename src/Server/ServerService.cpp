@@ -77,7 +77,8 @@ void Server::stop(void)
 {
 	this->_server_running = false;
 	close(this->_socket);
-	for (std::map<int, Client>::iterator i = this->_clients.begin(); i != this->_clients.end(); ++i) {
+	for (std::map<int, Client>::iterator i = this->_clients.begin(); i != this->_clients.end(); ++i) 
+	{
 		close(i->second.getSocket());
 	}
 }
