@@ -2,7 +2,9 @@
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
-# include "irc.hpp"
+#include "irc.hpp"
+#include "Client.hpp"
+#include "Channel.hpp"
 
 class Server;
 class Client;

@@ -2,7 +2,8 @@
 #ifndef CHANNEL_HPP
 # define CHANNEL_HPP
 
-# include "irc.hpp"
+#include "irc.hpp"
+#include "Client.hpp"
 
 class Channel 
 {

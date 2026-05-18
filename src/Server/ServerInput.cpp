@@ -1,5 +1,5 @@
 
-#include "irc.hpp"
+#include "Server.hpp"
 
 e_data Server::receiveClientData(Client &client) 
 {

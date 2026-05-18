@@ -1,5 +1,5 @@
 
-#include "irc.hpp"
+#include "Server.hpp"
 
 void Server::commandKick(Client &client, std::vector<std::string> &args)
 {	
@@ -120,12 +120,12 @@ void Server::commandTopic(Client &client, std::vector<std::string> &args)
 			std::string msg = chName + " :No topic is set";
 			return (this->sendReply(client, RPL_NOTOPIC, msg));
 		}
-
-		std::string topicMsg = chName + " :" + channel.getTopic();
-		return (this->sendReply(client, RPL_TOPIC, topicMsg));
+        std::string msg = ":" + this->_server_name + " 332 " + client.getNickname() 
+                + " " + chName + " :" + channel.getTopic();
+        return (this->sendMessage(client, msg));
 	}
 
-	if (channel.isTopicRestricted() && !channel.hasOperator(client))
+	if (args.size() >= 3 && channel.isTopicRestricted() && !channel.hasOperator(client))
 		return (this->sendError(client, ERR_CHANOPRIVSNEEDED, chName));
 
 	std::string newTopic = args[2];

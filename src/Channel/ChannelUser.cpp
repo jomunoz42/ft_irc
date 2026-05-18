@@ -1,5 +1,5 @@
 
-#include "irc.hpp"
+#include "Channel.hpp"
 
 void Channel::addUser(Client &client) 
 {

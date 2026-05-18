@@ -1,5 +1,5 @@
 
-#include "irc.hpp"
+#include "Server.hpp"
 
 void Server::start(void) 
 {

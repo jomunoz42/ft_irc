@@ -16,10 +16,7 @@
 # include <unistd.h>
 # include <iostream>
 # include <iterator>
-# include "Server.hpp"
-# include "Client.hpp"
 # include <sys/stat.h>
-# include "Channel.hpp"
 # include "defines.hpp"
 # include <sys/types.h>
 # include <arpa/inet.h>

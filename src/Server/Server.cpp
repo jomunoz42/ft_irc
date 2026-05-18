@@ -1,5 +1,5 @@
 
-#include "irc.hpp"
+#include "Server.hpp"
 
 Server::Server(int port, std::string password, std::string name) : _port(port), _server_running(false), _password(password), \
  _server_name(name) 
@@ -21,6 +21,7 @@ Server::Server(int port, std::string password, std::string name) : _port(port), 
 	this->_errors.insert(std::make_pair(ERR_NEEDMOREPARAMS, "Not enough parameters"));
 	this->_errors.insert(std::make_pair(ERR_PASSWDMISMATCH, "Password incorrect"));
 	this->_errors.insert(std::make_pair(ERR_NOSUCHNICK, "No such nick"));
+	this->_errors.insert(std::make_pair(ERR_BADCHANNELKEY, "Cannot join channel (+k)"));
 	this->_errors.insert(std::make_pair(ERR_NOSUCHCHANNEL, "No such channel"));
 	this->_errors.insert(std::make_pair(ERR_NOTONCHANNEL, "You're not on that channel"));
 	this->_errors.insert(std::make_pair(ERR_USERNOTINCHANNEL, "User not on that channel"));

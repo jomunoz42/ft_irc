@@ -1,5 +1,5 @@
 
-#include "irc.hpp"
+#include "Server.hpp"
 
 void Server::commandPass(Client &client, std::vector<std::string> &args) 
 {
@@ -65,7 +65,9 @@ void Server::commandJoin(Client &client, std::vector<std::string> &args)
 	if (!client.isRegistered())
 		return (this->sendError(client, ERR_NOTREGISTERED, args.at(0)));
 
-	std::string chName = args[1];
+	std::string chName = args[1], key = "";
+	if (args.size() >= 3)
+		key = args[2];
 
 	std::map<std::string, Channel>::iterator it = this->_channels.find(chName);
 
@@ -80,7 +82,14 @@ void Server::commandJoin(Client &client, std::vector<std::string> &args)
 		it->second.addOperator(client);
 	}
 
-	if (it->second.hasUser(client)) return ;
+	if (it->second.hasUser(client))
+		return ;
+
+	if (it->second.hasPassword())
+	{
+		if (key.empty() || key != it->second.getPassword())
+			return (this->sendError(client, ERR_BADCHANNELKEY, chName));
+	}
 
 	if (it->second.hasLimit() && it->second.getUsers().size() >= it->second.getUserLimit())
 		return (this->sendError(client, ERR_CHANNELISFULL, chName));

@@ -1,5 +1,5 @@
 
-#include "irc.hpp"
+#include "Server.hpp"
 
 void Server::sendMessage(Client &client, std::string &message) 
 {
@@ -18,7 +18,7 @@ e_data Server::flushSendBuffer(Client &client)
 		this->getPollfd(client.getSocket()).events &= ~POLLOUT;
 		return (SUCCESS);
 	}
-	
+
 	ssize_t bytes = send(client.getSocket(), send_buffer.c_str(), send_buffer.size(), 0);
 	if (bytes > 0) 
 	{
