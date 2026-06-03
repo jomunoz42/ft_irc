@@ -14,6 +14,8 @@ SRCS = main.cpp \
 	src/Server/ServerOutput.cpp \
 	src/Server/ServerService.cpp \
 	src/Server/ServerSockets.cpp \
+	src/Bot/Bot.cpp \
+	src/Bot/BotUtils.cpp \
 	src/utils.cpp
 
 OBJ_DIR = build

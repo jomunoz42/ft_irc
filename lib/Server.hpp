@@ -5,6 +5,7 @@
 #include "irc.hpp"
 #include "Client.hpp"
 #include "Channel.hpp"
+#include "Bot.hpp"
 
 class Server;
 class Client;
@@ -37,6 +38,7 @@ class Server
 		std::map<int, std::string> 		_replies;
 		std::map<std::string, Channel>  		_channels;
 		std::map<std::string, commandPtrServer> _server_commands;
+		Bot _bot;
 
 	public:
 

@@ -130,10 +130,34 @@ void Server::commandPrivmsg(Client &client, std::vector<std::string> &args)
 		if (!channel.hasUser(client))
 			return (this->sendError(client, ERR_NOTONCHANNEL, target));
 
+		if (args[2][0] == '!')
+		{
+			if (!this->_bot.isCommand(message))
+				return (this->sendError(client, ERR_UNKNOWNCOMMAND, target));
+			if (args.size() > 3)
+				return (this->sendError(client, ERR_TOOMUCHPARAMS, target));
+			std::string botResponse = this->_bot.executeCommand(message, client, channel);
+			std::string botMessage = ":" + this->getPrefix() + " PRIVMSG " + target + " :" + botResponse + "\r\n";
+			this->sendMessage(client, botMessage);
+			this->broadcastMessage(channel, botMessage, &client);
+			return;
+		}
 		this->broadcastMessage(channel, fullMessage, &client);
 	}
 	else
 	{
+		if (target == "Bot" || target == "bot" || target == "BOT")
+		{
+			if (!this->_bot.isCommand(message))
+				return (this->sendError(client, ERR_UNKNOWNCOMMAND, target));
+			if (args.size() > 3)
+				return (this->sendError(client, ERR_TOOMUCHPARAMS, target));
+			std::string botResponse = this->_bot.executeCommand(message, client, NULL);
+			std::string botMessage = ":" + this->getPrefix() + " PRIVMSG " + client.getNickname() + " :" + botResponse + "\r\n";
+			this->sendMessage(client, botMessage);
+			return;
+		}
+		
 		std::map<int, Client>::iterator it = this->_clients.begin();
 
 		while (it != this->_clients.end())

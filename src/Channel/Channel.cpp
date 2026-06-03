@@ -94,3 +94,5 @@ void Channel::setUserLimit(size_t limit) {this->_user_limit = limit;}
 std::string Channel::getPassword(void) const {return (this->_channel_password);}
 
 void Channel::setPassword(const std::string &password) {this->_channel_password = password;}
+
+std::vector<Client*> Channel::getChannelUsers(const Channel &channel) {return (channel._users);}

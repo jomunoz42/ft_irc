@@ -57,6 +57,8 @@ class Channel
 		void 				 addInvited(Client &client);
 		void 				 removeInvited(Client &client);
 		bool 				 hasInvited(Client &client);
+
+		static std::vector<Client*> getChannelUsers(const Channel &channel);
 };
 
 #endif
