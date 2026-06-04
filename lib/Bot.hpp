@@ -3,19 +3,21 @@
 
 # include "Client.hpp"
 
-class Bot {
+class Bot : public Client
+{
     private:
-        bool _channel;
+        int _port;
+        std::string _password;
+        void logIn(void);
 
     public:
-        Bot();
+        Bot(int port, const std::string& password);
         Bot(const Bot& other);
         Bot& operator=(const Bot& other);
         ~Bot();
 
         bool isCommand(const std::string& message) const;
-        bool getChannel(void) const;
-        std::string executeCommand(const std::string& command, const Client& client, const Channel* channel) const;
+        std::string executeCommand(const std::string& command, const Client& client) const;
 };  
 
 std::string getTime(void);

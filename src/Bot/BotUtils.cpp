@@ -6,7 +6,7 @@
 /*   By: pbongiov <pbongiov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 19:02:20 by pbongiov          #+#    #+#             */
-/*   Updated: 2026/06/03 23:02:08 by pbongiov         ###   ########.fr       */
+/*   Updated: 2026/06/04 17:43:49 by pbongiov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,13 +67,13 @@ std::string getInfo(void)
 {
     std::stringstream s;
 
-    s << "\nPRIVMSG: Send a message to a User or Channel\n" << "NICK: Change User Nickname\n" << "USER: Set Username" 
-      << "JOIN: Join an existing channel, !channel to see all channels\n\n";
+    s << "\nPRIVMSG: Send a message to a User or Channel\n" << "NICK: Change User Nickname\n" << "USER: Set Username (<username> 0 * :<real_name>)\n" 
+      << "JOIN: Join/ create a channel, !channel to see all channels\n\n";
 
     return (s.str());
 }
 
-std::string displayChannels(const Channel* channel)
-{
+// std::string displayChannels()
+// {
     
-}
+// }

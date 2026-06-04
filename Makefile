@@ -16,6 +16,7 @@ SRCS = main.cpp \
 	src/Server/ServerSockets.cpp \
 	src/Bot/Bot.cpp \
 	src/Bot/BotUtils.cpp \
+	src/Bot/BotCommands.cpp \
 	src/utils.cpp
 
 OBJ_DIR = build
@@ -58,10 +59,14 @@ re: fclean
 	@echo "Remaking executables..."
 	@make --no-print-directory
 
-run: re
-	@./$(NAME) 8080 pass
+r: re
+	@clear && ./$(NAME) 8080 pass
 
 val: re
 	@valgrind --leak-check=full ./$(NAME) 8080 pass
+
+bot: $(NAME)
+
+
 
 .PHONY: all clean fclean re run val*

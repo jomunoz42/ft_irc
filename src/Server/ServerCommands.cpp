@@ -136,7 +136,7 @@ void Server::commandPrivmsg(Client &client, std::vector<std::string> &args)
 				return (this->sendError(client, ERR_UNKNOWNCOMMAND, target));
 			if (args.size() > 3)
 				return (this->sendError(client, ERR_TOOMUCHPARAMS, target));
-			std::string botResponse = this->_bot.executeCommand(message, client, channel);
+			std::string botResponse = this->_bot.executeCommand(message, client);
 			std::string botMessage = ":" + this->getPrefix() + " PRIVMSG " + target + " :" + botResponse + "\r\n";
 			this->sendMessage(client, botMessage);
 			this->broadcastMessage(channel, botMessage, &client);
@@ -152,7 +152,7 @@ void Server::commandPrivmsg(Client &client, std::vector<std::string> &args)
 				return (this->sendError(client, ERR_UNKNOWNCOMMAND, target));
 			if (args.size() > 3)
 				return (this->sendError(client, ERR_TOOMUCHPARAMS, target));
-			std::string botResponse = this->_bot.executeCommand(message, client, NULL);
+			std::string botResponse = this->_bot.executeCommand(message, client);
 			std::string botMessage = ":" + this->getPrefix() + " PRIVMSG " + client.getNickname() + " :" + botResponse + "\r\n";
 			this->sendMessage(client, botMessage);
 			return;
