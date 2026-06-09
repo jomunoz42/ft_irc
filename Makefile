@@ -1,5 +1,6 @@
 
 NAME = ircserv
+BOT_NAME = bot
 
 SRCS = main.cpp \
 	src/Channel/Channel.cpp \
@@ -19,9 +20,18 @@ SRCS = main.cpp \
 	src/Bot/BotCommands.cpp \
 	src/utils.cpp
 
+BOT_SRCS = src/Bot/main.cpp \
+	src/Bot/Bot.cpp \
+	src/Bot/BotUtils.cpp \
+	src/Bot/BotCommands.cpp \
+	src/Client/Client.cpp \
+	src/Client/ClientRegister.cpp \
+	src/utils.cpp
+
 OBJ_DIR = build
 
 OBJS = $(SRCS:%.cpp=$(OBJ_DIR)/%.o)
+BOT_OBJS = $(BOT_SRCS:%.cpp=$(OBJ_DIR)/%.o)
 
 CPP = c++
 
@@ -34,6 +44,10 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	@$(CPP) $(OBJS) -o $(NAME)
 	@echo "Executable created!"
+
+bot: $(BOT_OBJS)
+	@$(CPP) $(BOT_OBJS) -o $(BOT_NAME)
+	@echo "Bot executable created!"
 
 $(OBJ_DIR)/%.o: %.cpp | $(OBJ_DIR)
 	@mkdir -p $(dir $@)
@@ -51,8 +65,8 @@ clean:
 	fi
 
 fclean: clean
-	@rm -f $(NAME)
-	@echo "Executable deleted!"
+	@rm -f $(NAME) $(BOT_NAME)
+	@echo "Executables deleted!"
 
 re: fclean
 	@echo "Recreating build directory..."
@@ -65,8 +79,4 @@ r: re
 val: re
 	@valgrind --leak-check=full ./$(NAME) 8080 pass
 
-bot: $(NAME)
-
-
-
-.PHONY: all clean fclean re run val*
+.PHONY: all clean fclean re run val bot

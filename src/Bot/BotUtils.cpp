@@ -77,3 +77,8 @@ std::string getInfo(void)
 // {
     
 // }
+
+std::string displayChannels(void)
+{
+    return (std::string("List of channels: (to be implemented)\n"));
+}
