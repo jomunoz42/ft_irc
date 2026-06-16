@@ -28,6 +28,7 @@ class Bot : public Client
         std::string getHost(void) const;
         std::string getPassword(void) const;
         int getPort(void) const;
+        std::string getMessage(std::string str);
 
         void run(void);
         bool isCommand(const std::string& message) const;

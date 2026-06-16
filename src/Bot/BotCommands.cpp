@@ -6,7 +6,7 @@
 /*   By: pbongiov <pbongiov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/04 19:36:14 by pbongiov          #+#    #+#             */
-/*   Updated: 2026/06/16 20:47:43 by pbongiov         ###   ########.fr       */
+/*   Updated: 2026/06/16 20:58:51 by pbongiov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@ std::string getSender(std::string s)
     return (s.substr(1, n - 2));
 }
 
-std::string getMessage(std::string s)
+std::string Bot::getMessage(std::string s)
 {
-    int n = s.find("DummyBot :");
-    
+    std::string name(_name + " :");
+    int n = s.find(name.c_str());
 
-    return (s.substr(n + 10, sizeof(s.c_str())));
+    return (s.substr(n + name.size(), sizeof(s.c_str())));
 }
 
 void Bot::listen(void)

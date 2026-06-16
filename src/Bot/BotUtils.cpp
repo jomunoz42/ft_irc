@@ -6,7 +6,7 @@
 /*   By: pbongiov <pbongiov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 19:02:20 by pbongiov          #+#    #+#             */
-/*   Updated: 2026/06/16 20:24:40 by pbongiov         ###   ########.fr       */
+/*   Updated: 2026/06/16 20:59:14 by pbongiov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,5 +79,5 @@ std::string getInfo(void)
 
 std::string listCommand(void)
 {
-    return (std::string("List of DummyBot commands:\n!hello\n!time\n!help\n!joke\n!list\n"));
+    return (std::string("List of Bot commands:\n!hello\n!time\n!help\n!joke\n!list\n"));
 }
