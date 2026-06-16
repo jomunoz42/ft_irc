@@ -6,7 +6,7 @@
 /*   By: pbongiov <pbongiov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 19:02:20 by pbongiov          #+#    #+#             */
-/*   Updated: 2026/06/04 17:43:49 by pbongiov         ###   ########.fr       */
+/*   Updated: 2026/06/16 20:24:40 by pbongiov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,12 @@
 std::string getTime(void)
 {
     std::time_t now = std::time(NULL);
+    std::string time = std::ctime(&now);
 
-    return(std::ctime(&now));
+    if (!time.empty() && time[time.size() - 1] == '\n')
+        time.erase(time.size() - 1);
+
+    return time;
 }
 
 std::string getJoke(void)
@@ -41,7 +45,7 @@ std::string getJoke(void)
     while(std::getline(file, line))
     {
         if(current_line == n)
-            return(line);
+            return(line + "\r\n");
         ++current_line;
     }
     std::cerr << "Error: Not enough jokes in jokes.txt" << std::endl;
@@ -50,15 +54,15 @@ std::string getJoke(void)
 
 int getIndex(const std::string& s)
 {
-    if (s == "!hello")
+    if (s == "!hello\r\n")
         return (0);
-    if (s == "!time")
+    if (s == "!time\r\n")
         return (1);
-    if (s == "!help")
+    if (s == "!help\r\n")
         return (2);
-    if (s == "!joke")
+    if (s == "!joke\r\n")
         return (3);
-    if (s == "!channel")
+    if (s == "!list\r\n")
         return (4);
     return (-1);
 }
@@ -67,18 +71,13 @@ std::string getInfo(void)
 {
     std::stringstream s;
 
-    s << "\nPRIVMSG: Send a message to a User or Channel\n" << "NICK: Change User Nickname\n" << "USER: Set Username (<username> 0 * :<real_name>)\n" 
-      << "JOIN: Join/ create a channel, !channel to see all channels\n\n";
+    s << "\nPRIVMSG: Send a message to a User/Bot or Channel\n" << "NICK: Change User Nickname\n" << "USER: Set Username (<username> 0 * :<real_name>)\n" 
+      << "JOIN: Join/Create a channel, !channel to see all channels";
 
     return (s.str());
 }
 
-// std::string displayChannels()
-// {
-    
-// }
-
-std::string displayChannels(void)
+std::string listCommand(void)
 {
-    return (std::string("List of channels: (to be implemented)\n"));
+    return (std::string("List of DummyBot commands:\n!hello\n!time\n!help\n!joke\n!list\n"));
 }

@@ -7,13 +7,13 @@ class Bot : public Client
 {
     private:
         int _port;
+        int _socket;
         std::string _password;
         std::string _host;
         void logIn(void);
-        bool sendAll(int socket_fd, const std::string& data);
+        void listen(void);
 
     public:
-        Bot(void);
         Bot(int port, const std::string& password);
         Bot(const Bot& other);
         Bot& operator=(const Bot& other);
@@ -26,17 +26,16 @@ class Bot : public Client
         std::string getHost(void) const;
         std::string getPassword(void) const;
         int getPort(void) const;
-        bool sendLine(int socket_fd, const std::string& line);
-        int connectToServer(void);
-        void receiveResponse(int socket_fd);
+
+        void run(void);
         bool isCommand(const std::string& message) const;
-        std::string executeCommand(const std::string& command, const Client& client) const;
+        void executeCommand(const std::string& command, const std::string& client) const;
 };  
 
 std::string getTime(void);
 std::string getJoke(void);
 std::string getInfo(void);
-std::string displayChannels(void);
+std::string listCommand(void);
 int getIndex(const std::string& s);
 
 #endif
