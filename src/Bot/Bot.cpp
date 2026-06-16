@@ -6,7 +6,7 @@
 /*   By: pbongiov <pbongiov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 17:23:54 by pbongiov          #+#    #+#             */
-/*   Updated: 2026/06/16 20:32:21 by pbongiov         ###   ########.fr       */
+/*   Updated: 2026/06/16 20:43:40 by pbongiov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ void Bot::setPort(int port){ _port = port; }
 void Bot::setPassword(const std::string& password){ _password = password; }
 
 void Bot::setHost(const std::string& host){ _host = host; }
+
+void Bot::setName(const std::string& name){ _name = name; }
 
 std::string Bot::getHost(void) const { return _host; }
 

@@ -6,7 +6,7 @@
 /*   By: pbongiov <pbongiov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/04 18:01:20 by pbongiov          #+#    #+#             */
-/*   Updated: 2026/06/16 17:46:05 by pbongiov         ###   ########.fr       */
+/*   Updated: 2026/06/16 20:47:17 by pbongiov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,28 @@ int main(int ac, char** av)
 {
     Bot dummyBot(0, "");
 
+    // make a fifth argument to set a personalized name
+    
     switch (ac)
     {
-        case 3:
+        case 4:
             dummyBot.setHost("127.0.0.1");
             dummyBot.setPort(std::atoi(av[1]));
             dummyBot.setPassword(av[2]);
+            dummyBot.setName(av[3]);
             break;
-        case 4:
+            
+        case 5:
             dummyBot.setHost(av[1]);
             dummyBot.setPort(std::atoi(av[2]));
             dummyBot.setPassword(av[3]);
+            dummyBot.setName(av[4]);
+
             break;
+            
         default:
-            std::cerr << "Usage: ./bot <port> <password>\n";
-            std::cerr << "       ./bot <host> <port> <password>\n";
+            std::cerr << "Usage: ./bot <port> <password> <bot_name>\n";
+            std::cerr << "       ./bot <host> <port> <password> <bot_name>\n";
             return 1;
     }
     

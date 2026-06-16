@@ -10,6 +10,7 @@ class Bot : public Client
         int _socket;
         std::string _password;
         std::string _host;
+        std::string _name;
         void logIn(void);
         void listen(void);
 
@@ -22,6 +23,7 @@ class Bot : public Client
         void setPort(int port);
         void setPassword(const std::string& password);
         void setHost(const std::string& host);
+        void setName(const std::string& host);
 
         std::string getHost(void) const;
         std::string getPassword(void) const;

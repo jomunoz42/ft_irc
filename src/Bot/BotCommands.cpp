@@ -6,7 +6,7 @@
 /*   By: pbongiov <pbongiov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/04 19:36:14 by pbongiov          #+#    #+#             */
-/*   Updated: 2026/06/16 20:28:28 by pbongiov         ###   ########.fr       */
+/*   Updated: 2026/06/16 20:47:43 by pbongiov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,13 @@
 
 void Bot::logIn(void)
 {
-    std::string passMsg("PASS ");
+    std::string passMsg("PASS " + _password + DELIMITER);
+    std::string nickMsg("NICK " + _name + DELIMITER);
+    std::string userMsg("USER " + _name + " 0 * :" + _name + DELIMITER);
 
-    passMsg += _password + "\r\n";
     send(_socket, passMsg.c_str(), passMsg.size(), 0);
-    send(_socket, "NICK DummyBot\r\n", 15, 0);
-    send(_socket, "USER DummyBot 0 * :DummyBot\r\n", 29, 0);
+    send(_socket, nickMsg.c_str(), nickMsg.size(), 0);
+    send(_socket, userMsg.c_str(), userMsg.size(), 0);
 }
 
 std::string getSender(std::string s)
