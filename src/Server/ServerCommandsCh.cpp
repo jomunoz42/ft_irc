@@ -237,10 +237,6 @@ void Server::commandMode(Client &client, std::vector<std::string> &args)
 }
 
 
-
-
-
-
 // KICK
 // when kicking a use if channel ends up having only 1 
 // user that user should become operator?

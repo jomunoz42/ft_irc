@@ -77,7 +77,6 @@ class Server
 
 		std::string getPrefix(void) const;
 		pollfd&		getPollfd(const int socket);
-		static std::map<std::string, Channel>& getChannels(void);
 };
 
 #endif

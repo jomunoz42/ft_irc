@@ -103,6 +103,24 @@ void Server::commandJoin(Client &client, std::vector<std::string> &args)
 	it->second.removeInvited(client);
 }
 
+bool 		parseDcc(Client &client, std::string message)
+{
+	(void)client;
+	std::vector<std::string> args = split(message, " ");
+
+	if (args[0] != "DCC")
+		return false;
+	if (args[1] != "SEND")
+	{
+		std::cerr << "DCC Usage: [DCC SEND <filename> <ip> <port> <file_size>]" << std::endl;
+		return false;
+	}
+	for (int i = 0; args.size(); i++)
+	{
+		std::cout << i << args[i] << std::endl;
+	}
+}
+
 void Server::commandPrivmsg(Client &client, std::vector<std::string> &args) 
 {
 	if (args.size() < 3)
@@ -110,10 +128,14 @@ void Server::commandPrivmsg(Client &client, std::vector<std::string> &args)
 	if (!client.isRegistered())
 		return (this->sendError(client, ERR_NOTREGISTERED, args.at(0)));
 
+
 	std::string target = args[1], message = args[2];
 
 	if (target.empty() || message.empty())
 		return (this->sendError(client, ERR_NEEDMOREPARAMS, args.at(0)));
+
+	if (message.find("DCC ") != std::string::npos)
+		parseDcc(client, message);
 
 	std::string fullMessage = ":" + client.getNickname()
 		+ " PRIVMSG " + target + " :" + message + "\r\n";
