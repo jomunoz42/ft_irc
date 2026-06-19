@@ -112,13 +112,16 @@ bool 		parseDcc(Client &client, std::string message)
 		return false;
 	if (args[1] != "SEND")
 	{
-		std::cerr << "DCC Usage: [DCC SEND <filename> <ip> <port> <file_size>]" << std::endl;
+		send(client.getSocket(), "DCC Usage: [DCC SEND <filename> <ip> <port> <file_size>]\r\n", 59, 0);
 		return false;
 	}
+
 	for (int i = 0; args.size(); i++)
 	{
 		std::cout << i << args[i] << std::endl;
 	}
+
+	return true;
 }
 
 void Server::commandPrivmsg(Client &client, std::vector<std::string> &args) 
@@ -128,14 +131,13 @@ void Server::commandPrivmsg(Client &client, std::vector<std::string> &args)
 	if (!client.isRegistered())
 		return (this->sendError(client, ERR_NOTREGISTERED, args.at(0)));
 
-
 	std::string target = args[1], message = args[2];
 
 	if (target.empty() || message.empty())
 		return (this->sendError(client, ERR_NEEDMOREPARAMS, args.at(0)));
 
-	if (message.find("DCC ") != std::string::npos)
-		parseDcc(client, message);
+	if (message.find("DCC ") != std::string::npos && !parseDcc(client, message))
+		return;
 
 	std::string fullMessage = ":" + client.getNickname()
 		+ " PRIVMSG " + target + " :" + message + "\r\n";
