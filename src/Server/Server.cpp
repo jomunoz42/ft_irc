@@ -31,6 +31,7 @@ Server::Server(int port, std::string password, std::string name) : _port(port), 
 	this->_errors.insert(std::make_pair(ERR_CHANNELISFULL, "Cannot join channel (+l)"));
 	this->_errors.insert(std::make_pair(ERR_INVITEONLYCHAN, "Cannot join channel (+i)"));
 	this->_errors.insert(std::make_pair(ERR_UNKNOWNMODE, "is unknown mode char to me"));
+	this->_errors.insert(std::make_pair(ERR_UNKUSER, "User not found"));
 
 	this->_replies.insert(std::make_pair(RPL_WELCOME, "Welcome to the IRC Network"));
 	this->_replies.insert(std::make_pair(RPL_YOURHOST, "Your host is " + this->_server_name));

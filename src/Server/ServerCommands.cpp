@@ -103,25 +103,36 @@ void Server::commandJoin(Client &client, std::vector<std::string> &args)
 	it->second.removeInvited(client);
 }
 
-bool 		parseDcc(Client &client, std::string message)
+int 		parseDcc(Client &client, std::string message)
 {
-	(void)client;
 	std::vector<std::string> args = split(message, " ");
 
 	if (args[0] != "DCC")
-		return false;
+		return 0;
 	if (args[1] != "SEND")
 	{
 		send(client.getSocket(), "DCC Usage: [DCC SEND <filename> <ip> <port> <file_size>]\r\n", 59, 0);
-		return false;
+		return 1;
 	}
 
-	for (int i = 0; args.size(); i++)
+	return 2;
+}
+
+void Server::clientConnect(Client& client, std::string target)
+{
+	std::map<int, Client>::iterator it;
+
+	for (it = _clients.begin(); it != _clients.end(); ++it)
 	{
-		std::cout << i << args[i] << std::endl;
+		if (it->second.getUsername() == target)
+		{
+			client.directConnection(it->second);
+			return ;
+		}
 	}
 
-	return true;
+	sendError(client, 474, target);
+	return ;
 }
 
 void Server::commandPrivmsg(Client &client, std::vector<std::string> &args) 
@@ -136,8 +147,20 @@ void Server::commandPrivmsg(Client &client, std::vector<std::string> &args)
 	if (target.empty() || message.empty())
 		return (this->sendError(client, ERR_NEEDMOREPARAMS, args.at(0)));
 
-	if (message.find("DCC ") != std::string::npos && !parseDcc(client, message))
-		return;
+	if (message.find("DCC ") != std::string::npos)
+	{
+		int x = parseDcc(client, message);
+		switch (x)
+		{
+			case 0:
+				break;
+			case 1:
+				return;
+			case 2:
+				clientConnect(client, target);
+				return;
+		}
+	}
 
 	std::string fullMessage = ":" + client.getNickname()
 		+ " PRIVMSG " + target + " :" + message + "\r\n";

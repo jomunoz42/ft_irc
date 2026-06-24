@@ -62,3 +62,8 @@ void Client::setUsername(const std::string username)
 		this->_has_username = true;
 	}
 }
+
+void	Client::directConnection(const Client& target)
+{
+	
+}

@@ -25,8 +25,9 @@
 #define ERR_USERNOTINCHANNEL 441
 #define ERR_CHANOPRIVSNEEDED 482
 #define ERR_CHANNELISFULL 471
-#define ERR_INVITEONLYCHAN 473
 #define ERR_UNKNOWNMODE 472
+#define ERR_INVITEONLYCHAN 473
+#define ERR_UNKUSER 474
 # define ERR_PORT_RANGE "Given port is out of the program's valid range, please try another port!"
 
 #endif
