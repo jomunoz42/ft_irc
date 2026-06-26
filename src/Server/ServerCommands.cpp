@@ -118,7 +118,7 @@ int 		parseDcc(Client &client, std::string message)
 	return 2;
 }
 
-void Server::clientConnect(Client& client, std::string target)
+void Server::clientConnect(Client& client, std::string& target, const std::string& message)
 {
 	std::map<int, Client>::iterator it;
 
@@ -126,7 +126,7 @@ void Server::clientConnect(Client& client, std::string target)
 	{
 		if (it->second.getUsername() == target)
 		{
-			client.directConnection(it->second);
+			client.directConnection(it->second, message);
 			return ;
 		}
 	}
@@ -157,7 +157,7 @@ void Server::commandPrivmsg(Client &client, std::vector<std::string> &args)
 			case 1:
 				return;
 			case 2:
-				clientConnect(client, target);
+				clientConnect(client, target, message);
 				return;
 		}
 	}

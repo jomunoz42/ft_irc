@@ -77,7 +77,7 @@ class Server
 
 		std::string getPrefix(void) const;
 		pollfd&		getPollfd(const int socket);
-		void 		clientConnect(Client& client, std::string message);
+		void 		clientConnect(Client& client, std::string& target, const std::string& message);
 
 };
 
