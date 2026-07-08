@@ -28,9 +28,6 @@ void Server::processData(Client &client)
 {
 	size_t pos;
 	std::string &buffer = client.getRecvBuffer();
-
-	// if ((pos = buffer.find("DCC SEND")) != std::string::npos)
-	// 	client.setReceiver(buffer);
 	
 	while ((pos = buffer.find(DELIMITER)) != std::string::npos) 
 	{

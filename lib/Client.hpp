@@ -44,9 +44,6 @@ class Client
 		void 						addChannel(const std::string &channel);
 		void 						removeChannel(const std::string &channel);
 		bool 						hasChannel(const std::string &channel);
-		void						directConnection(Client& target, const std::string& message);
-		void						setSender(Client& target, std::string message);
-		void						setReceiver(std::string message);
 };
 
 #endif
