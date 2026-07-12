@@ -70,7 +70,7 @@ void Server::commandNick(Client &client, std::vector<std::string> &args)
 
 void Server::commandUser(Client &client, std::vector<std::string> &args) 
 {
-	if (args.size() < 2)
+	if (args.size() < 5)
 		return (this->sendError(client, ERR_NEEDMOREPARAMS, args.at(0)));
 
 	bool was_registered = client.isRegistered();
@@ -177,6 +177,8 @@ void Server::commandPrivmsg(Client &client, std::vector<std::string> &args)
 		return (this->sendError(client, ERR_NOTREGISTERED, args.at(0)));
 
 	std::string target = args[1], message = args[2];
+	for (size_t i = 3; i < args.size(); ++i)
+		message += " " + args[i];
 
 	if (target.empty() || message.empty())
 		return (this->sendError(client, ERR_NEEDMOREPARAMS, args.at(0)));

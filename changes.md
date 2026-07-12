@@ -8,6 +8,7 @@
 - Replaced the custom registration text with standard IRC welcome numerics in [src/Server/ServerCommands.cpp](src/Server/ServerCommands.cpp).
 - Added standard JOIN-side replies for topic, names, and end-of-names in [src/Server/ServerCommands.cpp](src/Server/ServerCommands.cpp).
 - Fixed the TOPIC query response format in [src/Server/ServerCommandsCh.cpp](src/Server/ServerCommandsCh.cpp).
+- Made `PRIVMSG` rebuild the message from all remaining parameters in [src/Server/ServerCommands.cpp](src/Server/ServerCommands.cpp).
 
 ## Why
 
@@ -16,3 +17,4 @@
 - Invalid nicknames should be rejected with `ERR_ERRONEUSNICKNAME` instead of being accepted blindly.
 - IRC clients expect standard numeric replies when registration completes and when a channel join succeeds; the previous custom message was not protocol-compatible.
 - The previous TOPIC query path built the wrong wire format for `331` because it routed the reply through the generic helper.
+- IRC uses `:` to mark a trailing parameter that may contain spaces. Without it, the parser splits the text into separate parameters; `PRIVMSG` now joins those extra parameters so `PRIVMSG #chan hello world` and `PRIVMSG #chan :hello world` both deliver `hello world`.

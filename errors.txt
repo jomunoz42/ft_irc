@@ -1,2 +1,0 @@
-PRIVMSG sem ':' e com tem comportamento diferente
-USER cadastra sem 0 * :
