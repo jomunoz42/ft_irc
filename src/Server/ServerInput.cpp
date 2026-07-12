@@ -16,10 +16,6 @@ e_data Server::receiveClientData(Client &client)
 		}
 		if (bytes == 0)
 			return (DISCONNECTED);
-		if (errno == EINTR)
-			continue;
-		if (errno == EAGAIN || errno == EWOULDBLOCK)
-			return (SUCCESS);
 		return (std::cerr << "recv() failed: " << std::strerror(errno) << std::endl, ERROR);
 	}
 }

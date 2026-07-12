@@ -29,8 +29,6 @@ e_data Server::flushSendBuffer(Client &client)
 	}
 	if (bytes == 0)
 		return (DISCONNECTED);
-	if (errno == EAGAIN || errno == EWOULDBLOCK)
-		return (SUCCESS);
 	return (std::cerr << "send() failed: " << std::strerror(errno) << std::endl, ERROR);
 }
 
