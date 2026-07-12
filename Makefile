@@ -35,7 +35,7 @@ BOT_OBJS = $(BOT_SRCS:%.cpp=$(OBJ_DIR)/%.o)
 
 CPP = c++
 
-CPPFLAGS = -g #-Wall -Wextra -Werror -std=c++98
+CPPFLAGS = -g -Wall -Wextra -Werror -std=c++98
 
 INCLUDE = -Ilib
 

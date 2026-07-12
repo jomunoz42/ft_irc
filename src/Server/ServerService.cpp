@@ -3,6 +3,15 @@
 
 void Server::start(void) 
 {
+	struct sigaction ignore_pipe;
+	std::memset(&ignore_pipe, 0, sizeof(ignore_pipe));
+	ignore_pipe.sa_handler = SIG_IGN;
+	if (sigaction(SIGPIPE, &ignore_pipe, NULL) < 0)
+	{
+		std::string error = std::strerror(errno);
+		throw std::runtime_error(std::string("sigaction() failed: ") + error);
+	}
+
 	this->_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (this->_socket < 0) 
 	{

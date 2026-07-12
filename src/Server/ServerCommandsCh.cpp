@@ -117,8 +117,11 @@ void Server::commandTopic(Client &client, std::vector<std::string> &args)
 	{
 		if (channel.getTopic().empty())
 		{
-			std::string msg = chName + " :No topic is set";
-			return (this->sendReply(client, RPL_NOTOPIC, msg));
+			std::stringstream msg;
+			msg << this->getPrefix() << " " << RPL_NOTOPIC << " " << client.getNickname()
+				<< " " << chName << " :No topic is set";
+			std::string built = msg.str();
+			return (this->sendMessage(client, built));
 		}
         std::string msg = ":" + this->_server_name + " 332 " + client.getNickname() 
                 + " " + chName + " :" + channel.getTopic();

@@ -1,5 +1,36 @@
 
 #include "Server.hpp"
+#include <cctype>
+
+namespace
+{
+	bool isValidNickname(const std::string &nickname)
+	{
+		const std::string special = "[]\\`_^{|}";
+
+		if (nickname.empty() || nickname.size() > 9)
+			return (false);
+		if (!std::isalpha(static_cast<unsigned char>(nickname[0]))
+			&& special.find(nickname[0]) == std::string::npos)
+			return (false);
+		for (size_t i = 1; i < nickname.size(); ++i)
+		{
+			unsigned char current = static_cast<unsigned char>(nickname[i]);
+			if (!std::isalnum(current) && special.find(nickname[i]) == std::string::npos
+				&& nickname[i] != '-')
+				return (false);
+		}
+		return (true);
+	}
+
+	void sendWelcomeReplies(Server &server, Client &client)
+	{
+		std::string welcome = "Welcome to the IRC Network";
+		std::string host = "Your host is " + server.getPrefix().substr(1);
+		server.sendReply(client, RPL_WELCOME, welcome);
+		server.sendReply(client, RPL_YOURHOST, host);
+	}
+}
 
 void Server::commandPass(Client &client, std::vector<std::string> &args) 
 {
@@ -14,16 +45,15 @@ void Server::commandPass(Client &client, std::vector<std::string> &args)
 	if (!was_registered)	
 		client.registerClient();
 	if (!was_registered && client.isRegistered()) 
-	{
-		std::string message = "You are now registered to " + this->_server_name;
-		this->sendMessage(client, message);
-	}
+		sendWelcomeReplies(*this, client);
 }
 
 void Server::commandNick(Client &client, std::vector<std::string> &args) 
 {
 	if (args.size() < 2)
 		return (this->sendError(client, ERR_NEEDMOREPARAMS, args.at(0)));
+	if (!isValidNickname(args.at(1)))
+		return (this->sendError(client, ERR_ERRONEUSNICKNAME, args.at(0)));
 	for (std::map<int, Client>::iterator i = this->_clients.begin(); i != this->_clients.end(); ++i) 
 	{
 		Client &search_client = i->second;
@@ -35,10 +65,7 @@ void Server::commandNick(Client &client, std::vector<std::string> &args)
 	if (!was_registered)	
 		client.registerClient();
 	if (!was_registered && client.isRegistered())
-	{
-		std::string message = "You are now registered to " + this->_server_name;
-		this->sendMessage(client, message);
-	}
+		sendWelcomeReplies(*this, client);
 }
 
 void Server::commandUser(Client &client, std::vector<std::string> &args) 
@@ -52,10 +79,7 @@ void Server::commandUser(Client &client, std::vector<std::string> &args)
 	if (!was_registered)	
 		client.registerClient();
 	if (!was_registered && client.isRegistered()) 
-	{
-		std::string message = "You are now registered to " + this->_server_name;
-		this->sendMessage(client, message);
-	}
+		sendWelcomeReplies(*this, client);
 }
 
 void Server::commandJoin(Client &client, std::vector<std::string> &args) 
@@ -70,16 +94,13 @@ void Server::commandJoin(Client &client, std::vector<std::string> &args)
 		key = args[2];
 
 	std::map<std::string, Channel>::iterator it = this->_channels.find(chName);
+	bool newChannel = false;
 
 	if (it == this->_channels.end())
 	{
 		this->_channels.insert(std::make_pair(chName, Channel(chName)));
 		it = this->_channels.find(chName);
-
-		it->second.addUser(client);
-		client.addChannel(chName);
-
-		it->second.addOperator(client);
+		newChannel = true;
 	}
 
 	if (it->second.hasUser(client))
@@ -99,8 +120,53 @@ void Server::commandJoin(Client &client, std::vector<std::string> &args)
 
 	it->second.addUser(client);
 	client.addChannel(chName);
+	if (newChannel)
+		it->second.addOperator(client);
 	
 	it->second.removeInvited(client);
+
+	std::string joinMessage = ":" + client.getNickname() + " JOIN " + chName + "\r\n";
+	this->broadcastMessage(it->second, joinMessage, NULL);
+
+	if (it->second.getTopic().empty())
+	{
+		std::stringstream topicMessage;
+		topicMessage << this->getPrefix() << " " << RPL_NOTOPIC << " " << client.getNickname()
+			<< " " << chName << " :No topic is set";
+		std::string builtTopic = topicMessage.str();
+		this->sendMessage(client, builtTopic);
+	}
+	else
+	{
+		std::stringstream topicMessage;
+		topicMessage << this->getPrefix() << " " << RPL_TOPIC << " " << client.getNickname()
+			<< " " << chName << " :" << it->second.getTopic();
+		std::string builtTopic = topicMessage.str();
+		this->sendMessage(client, builtTopic);
+	}
+
+	std::vector<Client*> users = it->second.getUsers();
+	std::stringstream names;
+	for (size_t i = 0; i < users.size(); ++i)
+	{
+		if (i)
+			names << ' ';
+		if (it->second.hasOperator(*users.at(i)))
+			names << '@';
+		names << users.at(i)->getNickname();
+	}
+
+	std::stringstream namesReply;
+	namesReply << this->getPrefix() << " " << RPL_NAMREPLY << " " << client.getNickname()
+		<< " = " << chName << " :" << names.str();
+	std::string builtNames = namesReply.str();
+	this->sendMessage(client, builtNames);
+
+	std::stringstream endReply;
+	endReply << this->getPrefix() << " " << RPL_ENDOFNAMES << " " << client.getNickname()
+		<< " " << chName << " :End of /NAMES list";
+	std::string builtEnd = endReply.str();
+	this->sendMessage(client, builtEnd);
 }
 
 void Server::commandPrivmsg(Client &client, std::vector<std::string> &args) 
