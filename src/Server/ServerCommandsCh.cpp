@@ -50,10 +50,6 @@ void Server::commandKick(Client &client, std::vector<std::string> &args)
 
 void Server::commandInvite(Client &client, std::vector<std::string> &args) 
 {
-	std::cout << "ARGS SIZE: " << args.size() << std::endl;
-	for (size_t i = 0; i < args.size(); ++i)
-		std::cout << "[" << i << "] = " << args[i] << std::endl;
-
 	if (args.size() < 3)
 		return (this->sendError(client, ERR_NEEDMOREPARAMS, args.at(0)));
 	if (!client.isRegistered())

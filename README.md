@@ -226,4 +226,4 @@ Supported channel modes:
 
 ### AI Usage
 
-AI assistance was used for this README update to inspect the repository structure, summarize the implemented classes and command handlers, and draft English documentation that matches the current codebase. It was not used here to add new server features or modify the C++ source files. Any protocol behavior described in this README was checked against the existing implementation in `main.cpp`, `lib/`, and `src/`.
+AI assistance was used for this README update to inspect the repository structure, summarize the implemented classes and command handlers, and draft English documentation that matches the current codebase. It was also used to add new server features and modify the C++ source files. Any protocol behavior described in this README was checked against the existing implementation in `main.cpp`, `lib/`, and `src/`.
