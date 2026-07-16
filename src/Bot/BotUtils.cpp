@@ -45,7 +45,7 @@ std::string getJoke(void)
     while(std::getline(file, line))
     {
         if(current_line == n)
-            return(line + "\r\n");
+            return(line);
         ++current_line;
     }
     std::cerr << "Error: Not enough jokes in jokes.txt" << std::endl;
@@ -71,7 +71,7 @@ std::string getInfo(void)
 {
     std::stringstream s;
 
-    s << "\nPRIVMSG: Send a message to a User/Bot or Channel\n" << "NICK: Change User Nickname\n" << "USER: Set Username (<username> 0 * :<real_name>)\n" 
+    s << "PRIVMSG: Send a message to a User/Bot or Channel\n" << "NICK: Change User Nickname\n" << "USER: Set Username (<username> 0 * :<real_name>)\n"
       << "JOIN: Join/Create a channel, !channel to see all channels";
 
     return (s.str());
@@ -79,5 +79,5 @@ std::string getInfo(void)
 
 std::string listCommand(void)
 {
-    return (std::string("List of Bot commands:\n!hello\n!time\n!help\n!joke\n!list\n"));
+    return (std::string("List of Bot commands:\n!hello\n!time\n!help\n!joke\n!list"));
 }

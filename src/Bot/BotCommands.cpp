@@ -12,6 +12,40 @@
 
 #include "Bot.hpp"
 
+static bool hasNumericReply(const std::string& line, int code)
+{
+    std::stringstream expected;
+
+    expected << " " << code << " ";
+    return (line.find(expected.str()) != std::string::npos);
+}
+
+static void sendBotResponse(int socket, const std::string& client,
+    const std::string& response)
+{
+    size_t start = 0;
+
+    while (start < response.size())
+    {
+        size_t end = response.find('\n', start);
+        std::string line;
+
+        if (end == std::string::npos)
+            line = response.substr(start);
+        else
+            line = response.substr(start, end - start);
+        if (!line.empty() && line[line.size() - 1] == '\r')
+            line.erase(line.size() - 1);
+        if (!line.empty())
+        {
+            std::string message = "PRIVMSG " + client + " :" + line + DELIMITER;
+            send(socket, message.c_str(), message.size(), 0);
+        }
+        if (end == std::string::npos)
+            break;
+        start = end + 1;
+    }
+}
 
 void Bot::logIn(void)
 {
@@ -68,6 +102,13 @@ void Bot::listen(void)
 
             std::cout << "RECV: " << line << std::endl;
 
+            if (hasNumericReply(line, ERR_NICKNAMEINUSE))
+            {
+                std::cerr << "Bot name '" << _name
+                    << "' is already in use." << std::endl;
+                return;
+            }
+
             if (line.find("PRIVMSG") == std::string::npos)
                 continue;
 
@@ -112,36 +153,35 @@ bool Bot::isCommand(const std::string& message) const { return (message[0] == '!
 
 void Bot::executeCommand(const std::string& command, const std::string& client) const
 {
-    std::string message("PRIVMSG " + client + " :");
+    std::string response;
     int index = getIndex(command);
     
     switch (index)
     {
         case 0:
-            message += "Hello " + client + "!\r\n";
+            response = "Hello " + client + "!";
             break;
 
         case 1:
-            message += "Current time is " + getTime() + ".\r\n";
+            response = "Current time is " + getTime() + ".";
             break;
             
         case 2:
-            message += "Here are some useful information:\n" + getInfo() + "\r\n";
+            response = "Here are some useful information:\n" + getInfo();
             break;
             
         case 3:
-            message += getJoke() + "\r\n";
+            response = getJoke();
             break;
             
         case 4:
-            message += listCommand() + "\r\n";
+            response = listCommand();
             break;
             
         default:
-            message += "That's not a command :P. Try !list to see all Commands.\r\n";
+            response = "That's not a command :P. Try !list to see all Commands.";
     }
 
-    std::cout << message << std::endl;
-    
-    send(_socket, message.c_str(), message.size(), 0);
+    std::cout << response << std::endl;
+    sendBotResponse(_socket, client, response);
 }

@@ -2,34 +2,31 @@
 #include "Server.hpp"
 #include <cctype>
 
-namespace
+static bool isValidNickname(const std::string &nickname)
 {
-	bool isValidNickname(const std::string &nickname)
-	{
-		const std::string special = "[]\\`_^{|}";
+	const std::string special = "[]\\`_^{|}";
 
-		if (nickname.empty() || nickname.size() > 9)
-			return (false);
-		if (!std::isalpha(static_cast<unsigned char>(nickname[0]))
-			&& special.find(nickname[0]) == std::string::npos)
-			return (false);
-		for (size_t i = 1; i < nickname.size(); ++i)
-		{
-			unsigned char current = static_cast<unsigned char>(nickname[i]);
-			if (!std::isalnum(current) && special.find(nickname[i]) == std::string::npos
-				&& nickname[i] != '-')
-				return (false);
-		}
-		return (true);
-	}
-
-	void sendWelcomeReplies(Server &server, Client &client)
+	if (nickname.empty() || nickname.size() > 9)
+		return (false);
+	if (!std::isalpha(static_cast<unsigned char>(nickname[0]))
+		&& special.find(nickname[0]) == std::string::npos)
+		return (false);
+	for (size_t i = 1; i < nickname.size(); ++i)
 	{
-		std::string welcome = "Welcome to the IRC Network";
-		std::string host = "Your host is " + server.getPrefix().substr(1);
-		server.sendReply(client, RPL_WELCOME, welcome);
-		server.sendReply(client, RPL_YOURHOST, host);
+		unsigned char current = static_cast<unsigned char>(nickname[i]);
+		if (!std::isalnum(current) && special.find(nickname[i]) == std::string::npos
+			&& nickname[i] != '-')
+			return (false);
 	}
+	return (true);
+}
+
+static void sendWelcomeReplies(Server &server, Client &client)
+{
+	std::string welcome = "Welcome to the IRC Network";
+	std::string host = "Your host is " + server.getPrefix().substr(1);
+	server.sendReply(client, RPL_WELCOME, welcome);
+	server.sendReply(client, RPL_YOURHOST, host);
 }
 
 void Server::commandPass(Client &client, std::vector<std::string> &args) 
